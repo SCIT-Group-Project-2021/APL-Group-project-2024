@@ -13,7 +13,7 @@
 
 ## Statement
 
-    <statement> ::= 
+    <statement> ::= <selection-statement> | <return-statement>
     
     <selection-statement> ::= isItReally ( <expression> ) bet '{' <statement> '}' | isItReally ( <expression> ) bet '{' <statement> '}' orIsIt  '{' <statement> '}'
     
