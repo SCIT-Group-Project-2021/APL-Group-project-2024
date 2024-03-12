@@ -28,3 +28,11 @@
     <type-declaration> ::= <type> <identifier> | <type> <identifier> '=' <literal>
     
     <function-declaration> ::= <type> <identifier> '{' <expression> <return-statement> '}'
+
+# Tokens
+
+OPN_BRC ::= (
+CLSD_BRC ::= )
+OPN_C_BRC ::= {
+CLSD_C_BRC ::= }
+
