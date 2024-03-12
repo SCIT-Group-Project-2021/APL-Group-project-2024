@@ -41,3 +41,7 @@ CLSD_C_BRC ::= }
 
 TERMINATOR ::= .
 
+SQUOTE ::= '
+
+SQUOTE ::= "
+
