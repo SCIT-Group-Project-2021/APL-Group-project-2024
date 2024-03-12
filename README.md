@@ -13,11 +13,19 @@
 
 ## Statement
 
-    <statement> ::= <selection-statement> | <return-statement>
+    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement>
     
     <selection-statement> ::= isItReally OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statement> CLSD_C_BRC | isItReally OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statement> CLSD_C_BRC orIsIt OPN_C_BRC <statement> CLSD_C_BRC
+
+    <iteratation-statement> ::= <for-loop> | <while-loop>
     
     <return-statement> ::= sayLess | sayLess <identifier> | sayLess <literal>
+
+## Loop
+
+    <for-loop> ::= for OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statement> CLSD_C_BRC
+
+    <while-loop> ::= while OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statement> CLSD_C_BRC
 
 ## Expression
 
