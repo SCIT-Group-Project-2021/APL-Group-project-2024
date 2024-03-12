@@ -2,7 +2,7 @@
 
 ## Literals
 
-<literal> ::= <string> | <float> | <int>
+"<literal> ::= <string> | <float> | <int>"
 <type> ::= String | int | char | float
 
 <string> ::= {<string>}+ | {<char>}+ | {<int>}+
