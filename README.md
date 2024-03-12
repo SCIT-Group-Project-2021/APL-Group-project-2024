@@ -32,7 +32,12 @@
 # Tokens
 
 OPN_BRC ::= (
+
 CLSD_BRC ::= )
+
 OPN_C_BRC ::= {
+
 CLSD_C_BRC ::= }
+
+TERMINATOR ::= .
 
