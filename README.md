@@ -40,9 +40,9 @@
 
 ## Loop
 
-    <for-loop> ::= for OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+    <for-loop> ::= FOR_OP OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
-    <while-loop> ::= while OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+    <while-loop> ::= WHILE_OP OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
 ## Expression
 
@@ -60,7 +60,7 @@
     
     <if-selection> ::= IF OPN_BRC <expression> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
-    <switch-selection> ::= switch OPN_BRC <identifier> CLSD_BRC {<identifier> OPN_C_BRC <statement> CLSD_C_BRC}+
+    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC {<identifier> OPN_C_BRC <statement> CLSD_C_BRC}+
 
 # Tokens
     
@@ -101,4 +101,9 @@
     RETURN ::= sayLess
     
     TERMINATOR ::= . 
-    
+
+    SWITCH ::=
+
+    FOR_OP ::=
+
+    WHILE_OP ::=
