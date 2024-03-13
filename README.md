@@ -39,42 +39,42 @@
     <function-declaration> ::= <type> <identifier> OPN_C_BRC <expression> <return-statement> CLSD_C_BRC
 
 # Tokens
-
-OPN_BRC ::= (
-
-CLSD_BRC ::= )
-
-OPN_C_BRC ::= {
-
-CLSD_C_BRC ::= }
-
-TERMINATOR ::= .
-
-SQUOTE ::= '
-
-SQUOTE ::= "
-
-INT_SEPARATOR ::= .
-
-EQUAL ::= =
-
-MULTIPLY ::= *
-
-ADD ::= +
-
-SUB ::= -
-
-TRUE ::= fax
-
-FALSE ::= cap
-
-IF ::= isItReally
-
-THEN ::= bet
-
-ELSE ::= orIsIt
-
-RETURN ::= sayLess
-
-TERMINATOR ::= . 
-
+    
+    OPN_BRC ::= (
+    
+    CLSD_BRC ::= )
+    
+    OPN_C_BRC ::= {
+    
+    CLSD_C_BRC ::= }
+    
+    TERMINATOR ::= .
+    
+    SQUOTE ::= '
+    
+    SQUOTE ::= "
+    
+    INT_SEPARATOR ::= .
+    
+    EQUAL ::= =
+    
+    MULTIPLY ::= *
+    
+    ADD ::= +
+    
+    SUB ::= -
+    
+    TRUE ::= fax
+    
+    FALSE ::= cap
+    
+    IF ::= isItReally
+    
+    THEN ::= bet
+    
+    ELSE ::= orIsIt
+    
+    RETURN ::= sayLess
+    
+    TERMINATOR ::= . 
+    
