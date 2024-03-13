@@ -1,5 +1,11 @@
 # APL-Group-project-2024
 
+# Program
+
+    <file> ::= <program-dec>
+    
+    <program-dec> ::= <identifier> OPN_BRC <expression> CLSD_BRC
+
 ## Literals
 
     <literal> ::= DQUOTE <string> DQUOTE | <bool> | <float> | <int>
@@ -20,23 +26,27 @@
     
 ## Statement
 
+    <statements> ::= <statement>+
+
     <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement>
     
-    <selection-statement> ::= IF OPN_BRC <expression> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statement> CLSD_C_BRC ELSE OPN_C_BRC <statement> CLSD_C_BRC
+    <selection-statement> ::= IF OPN_BRC <expression> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
     <iteratation-statement> ::= <for-loop> | <while-loop>
+
+    <declaration-statement> ::= <type-declaration> | <function-declaration>
     
     <return-statement> ::= RETURN | RETURN <identifier> | RETURN <literal>
 
 ## Loop
 
-    <for-loop> ::= for OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statement> CLSD_C_BRC
+    <for-loop> ::= for OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
-    <while-loop> ::= while OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statement> CLSD_C_BRC
+    <while-loop> ::= while OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
 ## Expression
 
-    <expression> ::= <expression> | OPEN_BRC <expression> CLSD_BRC | <statement>
+    <expression> ::= <expression> | OPEN_BRC <expression> CLSD_BRC | <statements>
     
 ## Declaration
     
