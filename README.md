@@ -48,10 +48,11 @@
 
 ## Expression
     
-    <expression> ::= <math_expression>
+    <expression> ::= <math-expression> TERMINATOR | <function-expression> TERMINATOR
 
-    <math_expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_expression> CLSD_BRC
+    <math-expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math-expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math-expression> CLSD_BRC
 
+    <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ , {<identifier> | <literal> }}}* CLSD_BRC
     
 ## Declaration
     
