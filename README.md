@@ -30,7 +30,7 @@
 
     <statements> ::= <statement>+
 
-    <statement> ::= <selection-statement> | <return-statement> TERMINATOR | <iteratation-statement> | <declaration-statement> | <binding-statement> | <expression>
+    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <binding-statement> | <expression>
     
     <selection-statement> ::= <if-selection> | <switch-selection>
     
@@ -38,7 +38,7 @@
 
     <declaration-statement> ::= <type-declaration> TERMINATOR | <function-declaration>
     
-    <return-statement> ::= RETURN | <identifier> RETURN | <literal> RETURN 
+    <return-statement> ::= RETURN TERMINATOR | <identifier> RETURN TERMINATOR | <literal> RETURN TERMINATOR
 
 ## Loop
 
