@@ -72,7 +72,7 @@
 
 ## Operation
 
-    <math_operation> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation>
+    <math_operation> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_operation> CLSD_BRC
 
 # Tokens
     
