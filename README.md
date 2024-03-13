@@ -50,7 +50,7 @@
     
     <expression> ::= <math_expression>
 
-    <math_expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_operation> CLSD_BRC
+    <math_expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_expression> CLSD_BRC
 
     
 ## Declaration
@@ -63,17 +63,13 @@
 
 ## Binding
 
-    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> | <operation> }
+    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> | <expression> }
 
 ## Selection
     
     <if-selection> ::= IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <statements> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
-    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+
-
-## Operation
-
-    
+    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+   
 
 # Tokens
     
