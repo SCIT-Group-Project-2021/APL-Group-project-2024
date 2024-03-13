@@ -56,7 +56,7 @@
     
 ## Declaration
     
-    <type-declaration> ::= <type> <identifier> | <type> <identifier> EQUAL <literal>
+    <type-declaration> ::= <type> <identifier> TERMINATOR | <type> <identifier> EQUAL <literal> TERMINATOR
     
     <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ , <type-declaration>}}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
