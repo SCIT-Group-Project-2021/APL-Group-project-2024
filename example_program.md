@@ -15,7 +15,7 @@
             x sayLess.
         }
 
-        isItReally (x > 5) {
+        isItReally (x > 5.) {
             x = 25.
         } orIsIt {
             x = 0.

@@ -30,7 +30,7 @@
 
     <statements> ::= <statement>+
 
-    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <binding-statement> | <expression>
+    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <expression>
     
     <selection-statement> ::= <if-selection> | <switch-selection>
     
@@ -52,23 +52,19 @@
 
     <math-expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math-expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math-expression> CLSD_BRC
 
-    <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ , {<identifier> | <literal> }}*}* CLSD_BRC
+    <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ SEPARATOR {<identifier> | <literal> }}*}* CLSD_BRC
     
 ## Declaration
     
     <type-declaration> ::= <type> <identifier> TERMINATOR | <type> <identifier> EQUAL <literal> TERMINATOR
     
-    <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ , <type-declaration>}*}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
+    <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ SEPARATOR <type-declaration>}*}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
     <identifier> ::= <string>
 
-## Binding
-
-    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> | <expression> }
-
 ## Selection
     
-    <if-selection> ::= IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <statements> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
+    <if-selection> ::= IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
     <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+   
 
@@ -86,13 +82,17 @@
     
     SQUOTE ::= '
     
-    SQUOTE ::= "
+    DQUOTE ::= "
     
     INT_SEPARATOR ::= .
+
+    SEPARATOR ::= ,
     
     EQUAL ::= =
     
     MULTIPLY ::= *
+
+    DIVIDE ::= /
     
     ADD ::= +
     
