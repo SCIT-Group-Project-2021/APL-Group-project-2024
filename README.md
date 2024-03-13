@@ -36,7 +36,7 @@
 
     <declaration-statement> ::= <type-declaration> | <function-declaration>
     
-    <return-statement> ::= RETURN | RETURN <identifier> | RETURN <literal>
+    <return-statement> ::= RETURN | <identifier> RETURN | <literal> RETURN
 
 ## Loop
 
