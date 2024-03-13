@@ -4,7 +4,7 @@
 
     <file> ::= <program-dec>
     
-    <program-dec> ::= programName <identifier> OPN_C_BRC <expressions> <return-statement> CLSD_C_BRC
+    <program-dec> ::= programName <identifier> OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
 ## Literals
 
@@ -42,21 +42,22 @@
 
 ## Loop
 
-    <for-loop> ::= FOR_OP OPN_BRC <expressions> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+    <for-loop> ::= FOR_OP OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
-    <while-loop> ::= WHILE_OP OPN_BRC <expressions> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+    <while-loop> ::= WHILE_OP OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
 ## Expression
+    
+    <expression> ::= <math_expression>
 
-    <expressions> ::= <expression>+
+    <math_expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_operation> CLSD_BRC
 
-    <expression> ::= OPEN_BRC <expression> CLSD_BRC | <statements>
     
 ## Declaration
     
     <type-declaration> ::= <type> <identifier> | <type> <identifier> EQUAL <literal>
     
-    <function-declaration> ::= <type> <identifier>  OPN_BRC <expressions> CLSD_BRC OPN_C_BRC <expressions> <return-statement> CLSD_C_BRC
+    <function-declaration> ::= <type> <identifier>  OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
     <identifier> ::= <string>
 
@@ -66,15 +67,13 @@
 
 ## Selection
     
-    <if-selection> ::= IF OPN_BRC <expressions> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expressions> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
+    <if-selection> ::= IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <statements> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
     <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+
 
 ## Operation
 
-    <operation> ::= <math_operation>
-
-    <math_operation> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_operation> CLSD_BRC
+    
 
 # Tokens
     
