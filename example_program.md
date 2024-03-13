@@ -1,3 +1,26 @@
+#Code Example
+-----------------
+    programName program1 {
+    
+        int num1 = 14.
+        
+        int x.
+        
+        multiply (13,14).
+        
+        int multiply (int num 1, int num2) {
+        
+            x = num1 + (2 * 34).
+        
+            x sayLess.
+        }
+        
+        sayLess.
+    }
+
+
+#Syntax Breakdown
+-----------------
     <file> ::= <program-dec>
     <program-dec> ::= programName <identifier> OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
@@ -38,22 +61,4 @@
         
         <return-statement>
             sayLess.
-    }
-
-    programName program1 {
-    
-        int num1 = 14.
-        
-        int x.
-        
-        multiply (13,14).
-        
-        int multiply (int num 1, int num2) {
-        
-            x = num1 + (2 * 34).
-        
-            x sayLess.
-        }
-        
-        sayLess.
     }
