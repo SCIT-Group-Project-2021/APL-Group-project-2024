@@ -62,7 +62,7 @@
 
 ## Binding
 
-    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> }
+    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> | <operation }
 
 ## Selection
     
@@ -71,6 +71,8 @@
     <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+
 
 ## Operation
+
+    <operation> ::= <math_operation>
 
     <math_operation> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math_operation> CLSD_BRC
 
