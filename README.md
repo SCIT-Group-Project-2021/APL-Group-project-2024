@@ -40,19 +40,21 @@
 
 ## Loop
 
-    <for-loop> ::= FOR_OP OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+    <for-loop> ::= FOR_OP OPN_BRC <expressions> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
-    <while-loop> ::= WHILE_OP OPN_BRC <expression> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+    <while-loop> ::= WHILE_OP OPN_BRC <expressions> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
 
 ## Expression
 
-    <expression> ::= <expression> | OPEN_BRC <expression> CLSD_BRC | <statements>
+    <expressions> ::= <expression>+
+
+    <expression> ::= OPEN_BRC <expression> CLSD_BRC | <statements>
     
 ## Declaration
     
     <type-declaration> ::= <type> <identifier> | <type> <identifier> EQUAL <literal>
     
-    <function-declaration> ::= <type> <identifier>  OPN_BRC <expression> CLSD_BRC OPN_C_BRC <expression> <return-statement> CLSD_C_BRC
+    <function-declaration> ::= <type> <identifier>  OPN_BRC <expressions> CLSD_BRC OPN_C_BRC <expressions> <return-statement> CLSD_C_BRC
 
     <identifier> ::= <string>
 
@@ -62,7 +64,7 @@
 
 ## Selection
     
-    <if-selection> ::= IF OPN_BRC <expression> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
+    <if-selection> ::= IF OPN_BRC <expressions> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expressions> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
     <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC {<identifier> OPN_C_BRC <statement> CLSD_C_BRC}+
 
