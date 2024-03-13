@@ -28,7 +28,7 @@
 
     <statements> ::= <statement>+
 
-    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement>
+    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement>
     
     <selection-statement> ::= IF OPN_BRC <expression> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
