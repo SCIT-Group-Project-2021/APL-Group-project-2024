@@ -2,9 +2,10 @@
 
 ## Literals
 
-    <literal> ::= DQUOTE <string> DQUOTE | <float> | <int>
+    <literal> ::= DQUOTE <string> DQUOTE | <bool> | <float> | <int>
     <type> ::= String | int | char | float
-    
+
+    <bool> ::= TRUE | FALSE    
     <string> ::= <string>+ | {<char>}+ | {<int>}+ 
     <char> ::= a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
     <float> ::= <int>* INT_SEPARATOR <int>+
@@ -15,11 +16,11 @@
 
     <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement>
     
-    <selection-statement> ::= isItReally OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statement> CLSD_C_BRC | isItReally OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statement> CLSD_C_BRC orIsIt OPN_C_BRC <statement> CLSD_C_BRC
+    <selection-statement> ::= IF OPN_BRC <expression> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expression> CLSD_BRC bet OPN_C_BRC <statement> CLSD_C_BRC ELSE OPN_C_BRC <statement> CLSD_C_BRC
 
     <iteratation-statement> ::= <for-loop> | <while-loop>
     
-    <return-statement> ::= sayLess | sayLess <identifier> | sayLess <literal>
+    <return-statement> ::= RETURN | RETURN <identifier> | RETURN <literal>
 
 ## Loop
 
@@ -63,11 +64,17 @@ ADD ::= +
 
 SUB ::= -
 
+TRUE ::= fax
+
+FALSE ::= cap
+
 IF ::= isItReally
 
-ELSE - or is it
-Then - bet
-Return - say less
-; - . (Period)
-True - fax
-False - cap
+THEN ::= bet
+
+ELSE ::= orIsIt
+
+RETURN ::= sayLess
+
+TERMINATOR ::= . 
+
