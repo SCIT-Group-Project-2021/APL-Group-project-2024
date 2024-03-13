@@ -66,7 +66,7 @@
     
     <if-selection> ::= IF OPN_BRC <expressions> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expressions> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
-    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC {<identifier> OPN_C_BRC <statement> CLSD_C_BRC}+
+    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC {option <identifier> OPN_C_BRC <statement> CLSD_C_BRC}+
 
 # Tokens
     
