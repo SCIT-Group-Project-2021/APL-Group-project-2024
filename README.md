@@ -30,7 +30,7 @@
 
     <statements> ::= <statement>+
 
-    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <binding-statement>
+    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <binding-statement> | <expression>
     
     <selection-statement> ::= <if-selection> | <switch-selection>
     
