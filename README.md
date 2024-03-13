@@ -34,7 +34,7 @@
     
     <iteratation-statement> ::= <for-loop> | <while-loop>
 
-    <declaration-statement> ::= <type-declaration> | <function-declaration>
+    <declaration-statement> ::= <type-declaration> TERMINATOR | <function-declaration>
     
     <return-statement> ::= RETURN | <identifier> RETURN | <literal> RETURN
 
@@ -55,6 +55,10 @@
     <function-declaration> ::= <type> <identifier>  OPN_BRC <expression> CLSD_BRC OPN_C_BRC <expression> <return-statement> CLSD_C_BRC
 
     <identifier> ::= <string>
+
+## Initialization
+
+    <type-initialization>
 
 ## Selection
     
