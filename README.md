@@ -63,7 +63,7 @@
 
 ## Binding
 
-    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> | <operation }
+    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> | <operation> }
 
 ## Selection
     
