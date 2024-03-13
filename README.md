@@ -52,13 +52,13 @@
 
     <math-expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math-expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math-expression> CLSD_BRC
 
-    <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ , {<identifier> | <literal> }}}* CLSD_BRC
+    <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ , {<identifier> | <literal> }}*}* CLSD_BRC
     
 ## Declaration
     
     <type-declaration> ::= <type> <identifier> TERMINATOR | <type> <identifier> EQUAL <literal> TERMINATOR
     
-    <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ , <type-declaration>}}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
+    <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ , <type-declaration>}*}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
     <identifier> ::= <string>
 
