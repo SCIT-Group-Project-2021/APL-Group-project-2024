@@ -8,7 +8,9 @@
 
 ## Literals
 
-    <literal> ::= DQUOTE <string> DQUOTE | <bool> | <float> | <int>
+    <literal> ::= DQUOTE <string> DQUOTE | <bool> | <num-literal>
+
+    <num-literal> ::= <float> | <int>
     
     <type> ::= String | int | char | float
 
@@ -28,7 +30,7 @@
 
     <statements> ::= <statement>+
 
-    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement>
+    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <binding-statement>
     
     <selection-statement> ::= <if-selection> | <switch-selection>
     
@@ -58,15 +60,19 @@
 
     <identifier> ::= <string>
 
-## Initialization
+## Binding
 
-    <type-initialization>
+    <assignment> ::= <identifier> EQUAL { <literal> | <identifier> }
 
 ## Selection
     
     <if-selection> ::= IF OPN_BRC <expressions> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <expressions> CLSD_BRC bet OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
 
-    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC {option <identifier> OPN_C_BRC <statement> CLSD_C_BRC}+
+    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+
+
+## Operation
+
+    <math_operation> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math_operation>
 
 # Tokens
     
