@@ -38,6 +38,8 @@
     
     <function-declaration> ::= <type> <identifier> OPN_C_BRC <expression> <return-statement> CLSD_C_BRC
 
+    <identifier> ::= <string>
+
 # Tokens
     
     OPN_BRC ::= (
