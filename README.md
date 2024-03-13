@@ -4,7 +4,7 @@
 
     <file> ::= <program-dec>
     
-    <program-dec> ::= <identifier> OPN_C_BRC <expression> <return-statement> CLSD_C_BRC
+    <program-dec> ::= rogramName <identifier> OPN_C_BRC <expression> <return-statement> CLSD_C_BRC
 
 ## Literals
 
