@@ -30,7 +30,7 @@
 
 ## Expression
 
-    <expression> ::= <expression> | <expression> {<expression>}? | OPEN_BRC <expression> CLSD_BRC | <statement>
+    <expression> ::= <expression> | <expression> { <expression> , }? | OPEN_BRC <expression> CLSD_BRC | <statement>
     
 ## Declaration
     
