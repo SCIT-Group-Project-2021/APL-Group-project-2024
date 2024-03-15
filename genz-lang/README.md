@@ -20,6 +20,15 @@ GCC (or other linking tool)
 > conda create -n <env-name>
 > conda activate <env-name>
 
+###  Rply docs
+Link  to docs: https://rply.readthedocs.io/_/downloads/en/latest/pdf/
+
+### LLVM Reference Manual
+Link: https://releases.llvm.org/11.0.0/docs/LangRef.html#introduction
+
+Link to LLVMLite docs: https://llvmlite.readthedocs.io/en/latest/
+
+
 ## Commands to Generate Output file & Run Executable
 $ llc -filetype=obj output.ll
 
