@@ -37,7 +37,11 @@ class Parser():
         @self.pg.production('expression : NUMBER')
         def number(p):
             return ast_1.Number(self.builder, self.module, p[0].value)
-
+        
+        @self.pg.production('expression : OPEN_PAREN expression CLOSE_PAREN')
+        def parenthesized_expression(p):
+            return p[1]
+        
         @self.pg.error
         def error_handle(token):
             raise ValueError(token)

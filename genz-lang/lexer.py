@@ -21,6 +21,9 @@ class Lexer():
 
         # Number
         self.lexer.add('NUMBER', r'\d+')
+
+        self.lexer.add('TERMINATOR', r'\.')
+
         # Ignore spaces
         self.lexer.ignore('\s+')
 

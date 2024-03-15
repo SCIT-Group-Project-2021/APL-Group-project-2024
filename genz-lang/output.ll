@@ -5,9 +5,11 @@ target datalayout = ""
 define void @"main"()
 {
 entry:
-  %".2" = sdiv i8 4, 2
-  %".3" = bitcast [5 x i8]* @"fstr" to i8*
-  %".4" = call i32 (i8*, ...) @"printf"(i8* %".3", i8 %".2")
+  %".2" = mul i8 2, 2
+  %".3" = sdiv i8 4, %".2"
+  %".4" = mul i8 %".3", 2
+  %".5" = bitcast [5 x i8]* @"fstr" to i8*
+  %".6" = call i32 (i8*, ...) @"printf"(i8* %".5", i8 %".4")
   ret void
 }
 
