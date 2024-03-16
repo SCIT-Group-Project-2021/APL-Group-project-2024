@@ -46,6 +46,7 @@ class Parser():
         @self.pg.production('block_statement : while_statement')
         @self.pg.production('block_statement : return_statement')
         @self.pg.production('block_statement : print_statement')
+        @self.pg.production('block_statement : initialization')
         def block_statement(p):
             return p[0]
         
@@ -55,6 +56,7 @@ class Parser():
         @self.pg.production('statement : return_statement')
         @self.pg.production('statement : print_statement')
         @self.pg.production('statement : var_declaration')
+        @self.pg.production('statement : initialization')
         @self.pg.production('statement : function_declaration')
         def statement(p):
             return p[0]
@@ -66,7 +68,7 @@ class Parser():
             return ast_1.FunctionDeclaration(self.builder, self.module, p[0], p[1].getstr(), parameters, p[-2])
         
         @self.pg.production('parameters : parameter COMMA parameters')
-        @self.pg.production('parameters : parameter COMMA')
+        @self.pg.production('parameters : parameter')
         def parameters(p):
             if len(p) == 1:
                 return [p[0]]
@@ -75,7 +77,7 @@ class Parser():
         
         @self.pg.production('parameter : data_type IDENTIFIER')
         def parameter(p):
-            return ast_1.Parameter(p[0].getstr(), p[1].getstr())
+            return ast_1.Parameter(p[0], p[1])
         
         @self.pg.production('data_type : TYPE_INT')
         @self.pg.production('data_type : TYPE_VOID')
@@ -83,31 +85,29 @@ class Parser():
         def data_type(p):
             return p[0].getstr()
         
-        @self.pg.production('assignment : data_type IDENTIFIER ASSIGN expression TERMINATOR')
         @self.pg.production('assignment : IDENTIFIER ASSIGN expression TERMINATOR')
         def assignment_statement(p):
-            return None
+            return ast_1.Assignment(self.builder, self.module, p[0], p[2])
         
-        @self.pg.production('if_statement : IF OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
-        @self.pg.production('if_statement : IF OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE ELSE OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
-        @self.pg.production('expression : TRUE')
-        @self.pg.production('expression : FALSE')
-        @self.pg.production('expression : expression GREATER_THAN expression')
-        @self.pg.production('expression : expression LESS_THAN expression')
-        @self.pg.production('expression : expression GREATER_THAN_EQUALS expression')
-        @self.pg.production('expression : expression LESS_THAN_EQUALS expression')
-        @self.pg.production('expression : expression EQUALS expression')
-        @self.pg.production('expression : expression NOT_EQUALS expression')
+        @self.pg.production('initialization : data_type IDENTIFIER ASSIGN expression TERMINATOR')
+        def initialization_statement(p):
+            return ast_1.Initialization(self.builder, self.module, p[0], p[1], p[3])
+
+        @self.pg.production('if_statement : IF OPEN_PAREN conditional_expression CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
+        @self.pg.production('if_statement : IF OPEN_PAREN conditional_expression CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE ELSE OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
         def if_statement(p):
-            return None
-        
-        @self.pg.production('while_statement : WHILE OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
+            if len(p) == 7:
+                return ast_1.IfStatement(self.builder, self.module, p[2], p[5])
+            else:
+                return ast_1.IfElseStatement(self.builder, self.module, p[2], p[5], p[9])
+
+        @self.pg.production('while_statement : WHILE OPEN_PAREN conditional_expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
         def while_statement(p):
-            return None
+            return ast_1.WhileStatement(self.builder, self.module, p[2], p[5])
         
         @self.pg.production('var_declaration : data_type IDENTIFIER TERMINATOR')
         def var_declaration(p):
-            return None
+            return ast_1.VarDeclaration(self.builder, self.module, p[0], p[2])
         
         @self.pg.production('return_statement : RETURN expression TERMINATOR')
         def return_statement(p):
@@ -116,6 +116,23 @@ class Parser():
         @self.pg.production('print_statement : PRINT OPEN_PAREN expression CLOSE_PAREN TERMINATOR')
         def print_statement(p):
             return ast_1.Print(self.builder, self.module, self.printf, p[2])
+        
+        @self.pg.production('conditional_expression : TRUE')
+        @self.pg.production('conditional_expression : FALSE')
+        @self.pg.production('conditional_expression : expression GREATER_THAN expression')
+        @self.pg.production('conditional_expression : expression LESS_THAN expression')
+        @self.pg.production('conditional_expression : expression GREATER_THAN_EQUALS expression')
+        @self.pg.production('conditional_expression : expression LESS_THAN_EQUALS expression')
+        @self.pg.production('conditional_expression : expression EQUALS expression')
+        @self.pg.production('conditional_expression : expression NOT_EQUALS expression')
+        @self.pg.production('expression : conditional_expression')
+        def conditional_expression(p):
+            if len(p) == 1:
+                return p[0]
+            else:
+                left = p[0]
+                right = p[2]
+                return ast_1.RelationalStatement(self.builder, self.module, left, right)
 
         @self.pg.production('expression : expression SUM expression')
         @self.pg.production('expression : expression SUB expression')

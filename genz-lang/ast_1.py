@@ -1,6 +1,27 @@
 from llvmlite import ir
 import random
 
+class VarDeclaration():
+    def __init__(self, builder, module, data_type, target):
+        self.builder = builder
+        self.module = module
+        self.data_type = data_type
+        self.target = target
+
+    def eval(self):
+        llvm_type = self.get_llvm_type(self.data_type)
+        ptr = self.builder.alloca(llvm_type)
+        self.module.globals[self.target] = ptr
+
+    def get_llvm_type(self, data_type):
+        if data_type == "int":
+            return ir.IntType(32)
+        elif data_type == "boolean":
+            return ir.IntType(1)
+        else:
+            raise ValueError(f"Unsupported data type: {data_type}")
+
+
 class FunctionDeclaration():
     def __init__(self, builder, module, return_type, name, parameters, body):
         self.builder = builder
@@ -46,7 +67,7 @@ class FunctionDeclaration():
             return ir.VoidType()
         elif data_type == "int":
             return ir.IntType(32)
-        elif data_type == "boolean":
+        elif data_type == "bool":
             return ir.IntType(1)
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
@@ -56,7 +77,6 @@ class Parameter():
         self.data_type = data_type
         self.name = name
 
-        
 class ReturnStatement():
     def __init__(self, builder, module, value):
         self.builder = builder
@@ -69,6 +89,122 @@ class ReturnStatement():
             self.builder.ret(return_value)
         else:
             self.builder.ret_void()
+            
+class Assignment():
+    def __init__(self, builder, module, target, value):
+        self.builder = builder
+        self.module = module
+        self.target = target
+        self.value = value
+
+    def eval(self):
+        value = self.value.eval()
+        if isinstance(self.target, ir.Value):
+            # If target is an LLVM value, assign directly
+            self.builder.store(value, self.target)
+        else:
+            # If target is an identifier, lookup its LLVM value and assign
+            ptr = self.builder.alloca(value.type)
+            self.builder.store(value, ptr)
+            self.module.globals[self.target] = ptr
+
+class Initialization():
+    def __init__(self, builder, module, data_type, target, value):
+        self.builder = builder
+        self.module = module
+        self.data_type = data_type
+        self.target = target
+        self.value = value
+
+    def eval(self):
+        llvm_type = self.get_llvm_type(self.data_type)
+        value = self.value.eval()
+        ptr = self.builder.alloca(llvm_type)
+        self.builder.store(value, ptr)
+        self.module.globals[self.target] = ptr
+
+    def get_llvm_type(self, data_type):
+        if data_type == "int":
+            return ir.IntType(32)
+        elif data_type == "bool":
+            return ir.IntType(1)
+        else:
+            raise ValueError(f"Unsupported data type: {data_type}")
+        
+class RelationalStatement():
+    def __init__(self, builder, module, left, right):
+        self.builder = builder
+        self.module = module
+        self.left = left
+        self.right = right
+
+    def eval(self):
+        # Implement evaluation logic based on the specific relational operator
+        # For example, for greater than: self.builder.icmp_signed('>', self.left.eval(), self.right.eval(), 'compare')
+        raise NotImplementedError("Relational statements evaluation is not implemented")
+
+
+class IfStatement():
+    def __init__(self, builder, module, condition, body):
+        self.builder = builder
+        self.module = module
+        self.condition = condition
+        self.body = body
+
+    def eval(self):
+        cond = self.condition.eval()
+        with self.builder.if_then(cond) as then:
+            for statement in self.body:
+                statement.eval()
+
+class IfElseStatement():
+    def __init__(self, builder, module, condition, body, else_body):
+        self.builder = builder
+        self.module = module
+        self.condition = condition
+        self.body = body
+        self.else_body = else_body
+
+    def eval(self):
+        cond = self.condition.eval()
+
+        with self.builder.if_else(cond) as (then, otherwise):
+            with then:
+                for statement in self.body:
+                    statement.eval()
+
+            with otherwise:
+                for statement in self.else_body:
+                    statement.eval()
+
+class WhileStatement():
+    def __init__(self, builder, module, condition, body):
+        self.builder = builder
+        self.module = module
+        self.condition = condition
+        self.body = body
+
+    def eval(self):
+        preheader_block = self.builder.block
+
+        loop = self.builder.append_basic_block('loop')
+        self.builder.branch(loop)
+        self.builder.position_at_start(loop)
+
+        cond = self.condition.eval()
+        self.builder.cbranch(cond, loop, self.builder.block)
+
+        self.builder.position_at_start(self.builder.block)
+
+        for statement in self.body:
+            statement.eval()
+
+        self.builder.branch(loop)
+
+        new_block = self.builder.append_basic_block('afterloop')
+        self.builder.position_at_start(new_block)
+
+
 class Number():
     def __init__(self, builder, module, value):
         self.builder = builder
