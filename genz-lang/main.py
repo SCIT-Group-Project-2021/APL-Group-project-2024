@@ -20,7 +20,11 @@ printf = codegen.printf
 pg = Parser(module, builder, printf)
 pg.parse()
 parser = pg.get_parser()
-parser.parse(tokens).eval()
+parse_tree = parser.parse(tokens)[::-1]
+
+print(parse_tree)
+for statement in parse_tree:
+    statement.eval()
 
 codegen.create_ir()
 codegen.save_ir("output.ll")

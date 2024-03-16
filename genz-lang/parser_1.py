@@ -7,26 +7,48 @@ class Parser():
             # A list of all token names accepted by the parser.
             ['NUMBER', 'PRINT', 'OPEN_PAREN', 'CLOSE_PAREN',
              'SUM', 'SUB', 'DIV', 'MUL', 'IDENTIFIER', 'OPEN_CURL_BRACE', 'CLOSE_CURL_BRACE',
-             'TERMINATOR', 'COMMA', 'IF', 'WHILE', 'RETURN', 'INT', 'VOID', 'EQUALS'
+             'TERMINATOR', 'COMMA', 'IF', 'ELSE', 'WHILE', 'RETURN', 'TYPE_INT', 'TYPE_VOID', 'TYPE_BOOLEAN', 
+             'EQUALS', 'NOT_EQUALS', 'ASSIGN', 'TRUE', 'FALSE', 'GREATER_THAN', 'LESS_THAN', 'GREATER_THAN_EQUALS',
+             'LESS_THAN_EQUALS'
              ]
         )
         self.module = module
         self.builder = builder
         self.printf = printf
+        self.AST_statements = []
 
     def parse(self):
         @self.pg.production('program : statements')
         @self.pg.production('program : function_declaration')
         def program(p):
-            return p[0]
+            self.AST_statements.append(p[0])
+            return self.remove_duplicates(self.AST_statements)
         
-        @self.pg.production('statements : statement')
         @self.pg.production('statements : statement statements')
+        @self.pg.production('statements : statement')
         def statements(p):
             if len(p) == 1:
-                return p[0]  
+                self.AST_statements.append(p[0])
             else:
-                return [p[0]] + p[1]
+                self.AST_statements.append(p[0])
+                self.AST_statements.append(p[1][0])
+            return self.remove_duplicates(self.AST_statements)
+        
+        @self.pg.production('block_statements : block_statement block_statements')
+        @self.pg.production('block_statements : block_statement')
+        def block_statements(p):
+            if len(p) == 1:
+                return [p[0]]
+            else:
+                return self.remove_duplicates([p[0]] + [p[1]])
+            
+        @self.pg.production('block_statement : assignment')
+        @self.pg.production('block_statement : if_statement')
+        @self.pg.production('block_statement : while_statement')
+        @self.pg.production('block_statement : return_statement')
+        @self.pg.production('block_statement : print_statement')
+        def block_statement(p):
+            return p[0]
         
         @self.pg.production('statement : assignment')
         @self.pg.production('statement : if_statement')
@@ -35,30 +57,37 @@ class Parser():
         @self.pg.production('statement : print_statement')
         def statement(p):
             return p[0]
-        
-        @self.pg.production('function_declaration : data_type IDENTIFIER OPEN_PAREN parameters CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
+    
+        @self.pg.production('function_declaration : data_type IDENTIFIER OPEN_PAREN parameters CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
+        @self.pg.production('function_declaration : data_type IDENTIFIER OPEN_PAREN CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
         def function_declaration(p):
-            return None
+            parameters = p[3] if len(p) == 8 else []
+            return ast_1.FunctionDeclaration(self.builder, self.module, p[0], p[1].getstr(), parameters, p[-2])
         
-        @self.pg.production('parameters : parameter COMMA')
         @self.pg.production('parameters : parameter COMMA parameters')
+        @self.pg.production('parameters : parameter COMMA')
         def parameters(p):
-            return None
+            if len(p) == 1:
+                return [p[0]]
+            else:
+                return self.remove_duplicates([p[0]] + [p[1]])
         
-        @self.pg.production('parameter : IDENTIFIER')
+        @self.pg.production('parameter : data_type IDENTIFIER')
         def parameter(p):
-            return None
+            return ast_1.Parameter(p[0].getstr(), p[1].getstr())
         
-        @self.pg.production('data_type : INT')
-        @self.pg.production('data_type : VOID')
+        @self.pg.production('data_type : TYPE_INT')
+        @self.pg.production('data_type : TYPE_VOID')
+        @self.pg.production('data_type : TYPE_BOOLEAN')
         def data_type(p):
-            return None
+            return p[0].getstr()
         
-        @self.pg.production('assignment : IDENTIFIER EQUALS expression')
+        @self.pg.production('assignment : IDENTIFIER ASSIGN expression')
         def assignment_statement(p):
             return None
         
         @self.pg.production('if_statement : IF OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
+        @self.pg.production('if_statement : IF OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE ELSE OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
         def if_statement(p):
             return None
         
@@ -68,7 +97,7 @@ class Parser():
         
         @self.pg.production('return_statement : RETURN expression TERMINATOR')
         def return_statement(p):
-            return None
+            return ast_1.ReturnStatement(self.builder, self.module, p[1])
 
         @self.pg.production('print_statement : PRINT OPEN_PAREN expression CLOSE_PAREN TERMINATOR')
         def print_statement(p):
@@ -98,7 +127,7 @@ class Parser():
         @self.pg.production('identifier : IDENTIFIER')
         @self.pg.production('expression : identifier')
         def identifier(p):
-            return None
+            return p[0].getStr()
         
         @self.pg.production('expression : OPEN_PAREN expression CLOSE_PAREN')
         def parenthesized_expression(p):
@@ -110,3 +139,20 @@ class Parser():
 
     def get_parser(self):
         return self.pg.build()
+    
+    def remove_duplicates(self, lst):
+        flattened_list = self.flatten_list(lst)
+        new_list = []
+        for item in flattened_list:
+            if item not in new_list:
+                new_list.append(item)
+        return new_list
+
+    def flatten_list(self, lst):
+        flat_list = []
+        for item in lst:
+            if isinstance(item, list):
+                flat_list.extend(self.flatten_list(item))
+            else:
+                flat_list.append(item)
+        return flat_list

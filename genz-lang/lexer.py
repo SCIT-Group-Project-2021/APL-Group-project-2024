@@ -29,18 +29,30 @@ class Lexer():
         # Symbols
         self.lexer.add('TERMINATOR', r'\.')
         self.lexer.add('COMMA', r',')
-        self.lexer.add('EQUALS', r'=')
+        self.lexer.add('ASSIGN', r'=')
 
         # Constructs
         self.lexer.add('IF', r'isItReally')
+        self.lexer.add('ELSE', r'orIsIt')
         self.lexer.add('WHILE', r'while')
 
         # Return Statement
         self.lexer.add('RETURN', r'sayLess')
 
         # Data Types
-        self.lexer.add('INT', r'int')
-        self.lexer.add('VOID', r'void')
+        self.lexer.add('TYPE_INT', r'int')
+        self.lexer.add('TYPE_VOID', r'void')
+        self.lexer.add('TYPE_BOOLEAN', r'boolean')
+
+        # Comparisons
+        self.lexer.add('TRUE', r'fax')
+        self.lexer.add('FALSE', r'cap')
+        self.lexer.add('EQUALS', r'==')
+        self.lexer.add('NOT_EQUALS', r'!=')
+        self.lexer.add('GREATER_THAN', r'>')
+        self.lexer.add('LESS_THAN', r'<')
+        self.lexer.add('GREATER_THAN_EQUALS', r'>=')
+        self.lexer.add('LESS_THAN_EQUALS', r'<=')
 
         # Identifier 
         self.lexer.add('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*')
