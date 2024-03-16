@@ -91,7 +91,7 @@ class Parser():
         
         @self.pg.production('initialization : data_type IDENTIFIER ASSIGN expression TERMINATOR')
         def initialization_statement(p):
-            return ast_1.Initialization(self.builder, self.module, p[0], p[1], p[3])
+            return ast_1.Initialization(self.builder, self.module, p[0], p[1].getstr(), p[3])
 
         @self.pg.production('if_statement : IF OPEN_PAREN conditional_expression CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
         @self.pg.production('if_statement : IF OPEN_PAREN conditional_expression CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE ELSE OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
@@ -107,7 +107,7 @@ class Parser():
         
         @self.pg.production('var_declaration : data_type IDENTIFIER TERMINATOR')
         def var_declaration(p):
-            return ast_1.VarDeclaration(self.builder, self.module, p[0], p[2])
+            return ast_1.VarDeclaration(self.builder, self.module, p[0], p[1].getstr())
         
         @self.pg.production('return_statement : RETURN expression TERMINATOR')
         def return_statement(p):
@@ -132,7 +132,8 @@ class Parser():
             else:
                 left = p[0]
                 right = p[2]
-                return ast_1.RelationalStatement(self.builder, self.module, left, right)
+                operator = p[1].value
+                return ast_1.RelationalStatement(self.builder, self.module, left, right, operator)
 
         @self.pg.production('expression : expression SUM expression')
         @self.pg.production('expression : expression SUB expression')

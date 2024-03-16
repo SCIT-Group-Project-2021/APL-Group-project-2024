@@ -26,6 +26,16 @@ class Lexer():
         # Number
         self.lexer.add('NUMBER', r'\d+')
 
+        # Comparisons
+        self.lexer.add('TRUE', r'fax')
+        self.lexer.add('FALSE', r'cap')
+        self.lexer.add('EQUALS', r'==')
+        self.lexer.add('NOT_EQUALS', r'!=')
+        self.lexer.add('GREATER_THAN_EQUALS', r'>=')
+        self.lexer.add('LESS_THAN_EQUALS', r'<=')
+        self.lexer.add('GREATER_THAN', r'>')
+        self.lexer.add('LESS_THAN', r'<')
+
         # Symbols
         self.lexer.add('TERMINATOR', r'\.')
         self.lexer.add('COMMA', r',')
@@ -43,16 +53,6 @@ class Lexer():
         self.lexer.add('TYPE_INT', r'int')
         self.lexer.add('TYPE_VOID', r'void')
         self.lexer.add('TYPE_BOOLEAN', r'bool')
-
-        # Comparisons
-        self.lexer.add('TRUE', r'fax')
-        self.lexer.add('FALSE', r'cap')
-        self.lexer.add('EQUALS', r'==')
-        self.lexer.add('NOT_EQUALS', r'!=')
-        self.lexer.add('GREATER_THAN_EQUALS', r'>=')
-        self.lexer.add('LESS_THAN_EQUALS', r'<=')
-        self.lexer.add('GREATER_THAN', r'>')
-        self.lexer.add('LESS_THAN', r'<')
 
         # Identifier 
         self.lexer.add('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*')

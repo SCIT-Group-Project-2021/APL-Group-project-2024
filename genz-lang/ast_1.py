@@ -10,12 +10,17 @@ class VarDeclaration():
 
     def eval(self):
         llvm_type = self.get_llvm_type(self.data_type)
-        ptr = self.builder.alloca(llvm_type)
-        self.module.globals[self.target] = ptr
+        variable_name = self.target
+        # Check if variable is already declared
+        if variable_name not in self.module.globals:  
+            ptr = self.builder.alloca(llvm_type, name=variable_name)
+            self.module.globals[variable_name] = ptr
+        else:
+            raise ValueError(f"Variable '{variable_name}' is already declared")
 
     def get_llvm_type(self, data_type):
         if data_type == "int":
-            return ir.IntType(32)
+            return ir.IntType(8)
         elif data_type == "boolean":
             return ir.IntType(1)
         else:
@@ -66,7 +71,7 @@ class FunctionDeclaration():
         if data_type == "void":
             return ir.VoidType()
         elif data_type == "int":
-            return ir.IntType(32)
+            return ir.IntType(8)
         elif data_type == "bool":
             return ir.IntType(1)
         else:
@@ -100,7 +105,6 @@ class Assignment():
     def eval(self):
         value = self.value.eval()
         if isinstance(self.target, ir.Value):
-            # If target is an LLVM value, assign directly
             self.builder.store(value, self.target)
         else:
             # If target is an identifier, lookup its LLVM value and assign
@@ -119,29 +123,49 @@ class Initialization():
     def eval(self):
         llvm_type = self.get_llvm_type(self.data_type)
         value = self.value.eval()
+
+        # Check for type mismatch
+        if llvm_type != value.type:
+            raise ValueError(f"Type mismatch: Cannot initialize '{self.target}' of type '{llvm_type}' with value of type '{value.type}'")
+        
         ptr = self.builder.alloca(llvm_type)
         self.builder.store(value, ptr)
         self.module.globals[self.target] = ptr
 
     def get_llvm_type(self, data_type):
         if data_type == "int":
-            return ir.IntType(32)
+            return ir.IntType(8)
         elif data_type == "bool":
             return ir.IntType(1)
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
         
 class RelationalStatement():
-    def __init__(self, builder, module, left, right):
+    def __init__(self, builder, module, left, right, operator):
         self.builder = builder
         self.module = module
         self.left = left
         self.right = right
+        self.operator = operator
 
     def eval(self):
-        # Implement evaluation logic based on the specific relational operator
-        # For example, for greater than: self.builder.icmp_signed('>', self.left.eval(), self.right.eval(), 'compare')
-        raise NotImplementedError("Relational statements evaluation is not implemented")
+        left_value = self.left.eval()
+        right_value = self.right.eval()
+
+        if self.operator == '>':
+            return self.builder.icmp_signed('>', left_value, right_value, 'compare_gt')
+        elif self.operator == '<':
+            return self.builder.icmp_signed('<', left_value, right_value, 'compare_lt')
+        elif self.operator == '>=':
+            return self.builder.icmp_signed('>=', left_value, right_value, 'compare_ge')
+        elif self.operator == '<=':
+            return self.builder.icmp_signed('<=', left_value, right_value, 'compare_le')
+        elif self.operator == '==':
+            return self.builder.icmp_signed('==', left_value, right_value, 'compare_eq')
+        elif self.operator == '!=':
+            return self.builder.icmp_signed('!=', left_value, right_value, 'compare_ne')
+        else:
+            raise ValueError(f"Unsupported relational operator: {self.operator}")
 
 
 class IfStatement():

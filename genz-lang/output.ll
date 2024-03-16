@@ -5,21 +5,32 @@ target datalayout = ""
 define void @"main"()
 {
 entry:
-  %".2" = add i8 5, 4
-  %".3" = sdiv i8 %".2", 2
-  %".4" = bitcast [5 x i8]* @"fstr-$91451" to i8*
-  %".5" = call i32 (i8*, ...) @"printf"(i8* %".4", i8 %".3")
-  %".6" = mul i8 6, 7
-  %".7" = bitcast [5 x i8]* @"fstr-$67363" to i8*
-  %".8" = call i32 (i8*, ...) @"printf"(i8* %".7", i8 %".6")
-  %".9" = mul i8 7, 8
-  %".10" = bitcast [5 x i8]* @"fstr-$35216" to i8*
-  %".11" = call i32 (i8*, ...) @"printf"(i8* %".10", i8 %".9")
+  %"compare_eq" = icmp eq i8 1, 1
+  %".2" = bitcast [5 x i8]* @"fstr-$30134" to i8*
+  %".3" = call i32 (i8*, ...) @"printf"(i8* %".2", i1 %"compare_eq")
+  %"compare_ne" = icmp ne i8 1, 1
+  %".4" = bitcast [5 x i8]* @"fstr-$29689" to i8*
+  %".5" = call i32 (i8*, ...) @"printf"(i8* %".4", i1 %"compare_ne")
+  %"compare_gt" = icmp sgt i8 2, 3
+  %".6" = bitcast [5 x i8]* @"fstr-$91453" to i8*
+  %".7" = call i32 (i8*, ...) @"printf"(i8* %".6", i1 %"compare_gt")
+  %"compare_lt" = icmp slt i8 5, 10
+  %".8" = bitcast [5 x i8]* @"fstr-$23925" to i8*
+  %".9" = call i32 (i8*, ...) @"printf"(i8* %".8", i1 %"compare_lt")
+  %"compare_ge" = icmp sge i8 21, 18
+  %".10" = bitcast [5 x i8]* @"fstr-$98831" to i8*
+  %".11" = call i32 (i8*, ...) @"printf"(i8* %".10", i1 %"compare_ge")
+  %"compare_le" = icmp sle i8 21, 18
+  %".12" = bitcast [5 x i8]* @"fstr-$17454" to i8*
+  %".13" = call i32 (i8*, ...) @"printf"(i8* %".12", i1 %"compare_le")
   ret void
 }
 
 declare i32 @"printf"(i8* %".1", ...)
 
-@"fstr-$91451" = internal constant [5 x i8] c"%i \0a\00"
-@"fstr-$67363" = internal constant [5 x i8] c"%i \0a\00"
-@"fstr-$35216" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$30134" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$29689" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$91453" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$23925" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$98831" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$17454" = internal constant [5 x i8] c"%i \0a\00"
