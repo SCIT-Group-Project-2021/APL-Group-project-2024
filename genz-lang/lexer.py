@@ -42,17 +42,17 @@ class Lexer():
         # Data Types
         self.lexer.add('TYPE_INT', r'int')
         self.lexer.add('TYPE_VOID', r'void')
-        self.lexer.add('TYPE_BOOLEAN', r'boolean')
+        self.lexer.add('TYPE_BOOLEAN', r'bool')
 
         # Comparisons
         self.lexer.add('TRUE', r'fax')
         self.lexer.add('FALSE', r'cap')
         self.lexer.add('EQUALS', r'==')
         self.lexer.add('NOT_EQUALS', r'!=')
-        self.lexer.add('GREATER_THAN', r'>')
-        self.lexer.add('LESS_THAN', r'<')
         self.lexer.add('GREATER_THAN_EQUALS', r'>=')
         self.lexer.add('LESS_THAN_EQUALS', r'<=')
+        self.lexer.add('GREATER_THAN', r'>')
+        self.lexer.add('LESS_THAN', r'<')
 
         # Identifier 
         self.lexer.add('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*')
@@ -66,5 +66,8 @@ class Lexer():
     
     def print_tokens(self, text_input):
         lexer = self.get_lexer()
-        for token in lexer.lex(text_input):
-            print(f"Token: {token.name}, Value: {token.value}")
+        try:
+            for token in lexer.lex(text_input):
+                print(f"Token: {token.name}, Value: {token.value}")
+        except Exception as e:
+            print(f"Lexer Error: {e}")

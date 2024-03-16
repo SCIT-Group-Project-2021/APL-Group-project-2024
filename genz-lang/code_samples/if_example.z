@@ -1,0 +1,16 @@
+int x.
+
+isItReally (fax) {
+    x = 25.
+}
+
+int age = 20.
+bool isOver18.
+
+isItReally (age >= 18) {
+    isOver18 = fax.
+    print(1).
+} orIsIt {
+    isOver18 = cap.
+    print(0).
+}

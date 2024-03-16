@@ -48,6 +48,7 @@ class CodeGen():
         # Create a LLVM module object from the IR
         self.builder.ret_void()
         llvm_ir = str(self.module)
+        print('LLVM', llvm_ir)
         mod = self.binding.parse_assembly(llvm_ir)
         mod.verify()
         # Now add the module and make sure it is ready for execution

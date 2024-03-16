@@ -38,6 +38,7 @@ class FunctionDeclaration():
             if llvm_return_type == ir.VoidType():
                 self.builder.ret_void()
 
+        print("Function", function)
         return function
 
     def get_llvm_type(self, data_type):

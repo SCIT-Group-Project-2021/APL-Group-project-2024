@@ -19,7 +19,6 @@ class Parser():
 
     def parse(self):
         @self.pg.production('program : statements')
-        @self.pg.production('program : function_declaration')
         def program(p):
             self.AST_statements.append(p[0])
             return self.remove_duplicates(self.AST_statements)
@@ -55,6 +54,8 @@ class Parser():
         @self.pg.production('statement : while_statement')
         @self.pg.production('statement : return_statement')
         @self.pg.production('statement : print_statement')
+        @self.pg.production('statement : var_declaration')
+        @self.pg.production('statement : function_declaration')
         def statement(p):
             return p[0]
     
@@ -82,17 +83,30 @@ class Parser():
         def data_type(p):
             return p[0].getstr()
         
-        @self.pg.production('assignment : IDENTIFIER ASSIGN expression')
+        @self.pg.production('assignment : data_type IDENTIFIER ASSIGN expression TERMINATOR')
+        @self.pg.production('assignment : IDENTIFIER ASSIGN expression TERMINATOR')
         def assignment_statement(p):
             return None
         
         @self.pg.production('if_statement : IF OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
         @self.pg.production('if_statement : IF OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE ELSE OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
+        @self.pg.production('expression : TRUE')
+        @self.pg.production('expression : FALSE')
+        @self.pg.production('expression : expression GREATER_THAN expression')
+        @self.pg.production('expression : expression LESS_THAN expression')
+        @self.pg.production('expression : expression GREATER_THAN_EQUALS expression')
+        @self.pg.production('expression : expression LESS_THAN_EQUALS expression')
+        @self.pg.production('expression : expression EQUALS expression')
+        @self.pg.production('expression : expression NOT_EQUALS expression')
         def if_statement(p):
             return None
         
         @self.pg.production('while_statement : WHILE OPEN_PAREN expression CLOSE_PAREN OPEN_CURL_BRACE statements CLOSE_CURL_BRACE')
         def while_statement(p):
+            return None
+        
+        @self.pg.production('var_declaration : data_type IDENTIFIER TERMINATOR')
+        def var_declaration(p):
             return None
         
         @self.pg.production('return_statement : RETURN expression TERMINATOR')
@@ -127,7 +141,7 @@ class Parser():
         @self.pg.production('identifier : IDENTIFIER')
         @self.pg.production('expression : identifier')
         def identifier(p):
-            return p[0].getStr()
+            return p[0]
         
         @self.pg.production('expression : OPEN_PAREN expression CLOSE_PAREN')
         def parenthesized_expression(p):
@@ -135,7 +149,7 @@ class Parser():
         
         @self.pg.error
         def error_handle(token):
-            raise ValueError("Ran into a %s where it wasn't expected" % token.gettokentype())
+            raise SyntaxError(f"SYNTAX ERROR at line {token.source_pos.lineno}, column {token.source_pos.colno}: Unexpected token '{token.gettokentype()}'")
 
     def get_parser(self):
         return self.pg.build()

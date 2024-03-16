@@ -1,8 +1,15 @@
+import sys
 from lexer import Lexer
 from parser_1 import Parser
 from codegen import CodeGen
 
+# Default file path if no argument is provided
 fname = "input.z"
+
+# Get the file path from the terminal arguments
+if len(sys.argv) > 1:
+    fname = sys.argv[1]
+    
 with open(fname) as f:
     text_input = f.read()
 
@@ -22,6 +29,7 @@ pg.parse()
 parser = pg.get_parser()
 parse_tree = parser.parse(tokens)[::-1]
 
+print("\n\n ----- PARSE TREE ------\n")
 print(parse_tree)
 for statement in parse_tree:
     statement.eval()
