@@ -8,6 +8,8 @@ with open(fname) as f:
 
 lexer = Lexer().get_lexer()
 tokens = lexer.lex(text_input)
+print("----- TOKENS ------\n")
+Lexer().print_tokens(text_input)
 
 codegen = CodeGen()
 

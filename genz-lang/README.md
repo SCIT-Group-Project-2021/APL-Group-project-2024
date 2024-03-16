@@ -20,6 +20,9 @@ GCC (or other linking tool)
 > conda create -n <env-name>
 > conda activate <env-name>
 
+### Ply Lex Yacc
+https://www.dabeaz.com/ply/ply.html
+
 ###  Rply docs
 Link  to docs: https://rply.readthedocs.io/_/downloads/en/latest/pdf/
 
