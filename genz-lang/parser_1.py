@@ -46,6 +46,7 @@ class Parser():
         @self.pg.production('block_statement : while_statement')
         @self.pg.production('block_statement : return_statement')
         @self.pg.production('block_statement : print_statement')
+        @self.pg.production('block_statement : var_declaration')
         @self.pg.production('block_statement : initialization')
         def block_statement(p):
             return p[0]

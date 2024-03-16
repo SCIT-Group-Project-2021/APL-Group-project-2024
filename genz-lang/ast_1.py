@@ -166,8 +166,7 @@ class RelationalStatement():
             return self.builder.icmp_signed('!=', left_value, right_value, 'compare_ne')
         else:
             raise ValueError(f"Unsupported relational operator: {self.operator}")
-
-
+        
 class IfStatement():
     def __init__(self, builder, module, condition, body):
         self.builder = builder
