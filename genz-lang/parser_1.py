@@ -140,8 +140,6 @@ class Parser():
         def print_statement(p):
             return ast_1.Print(self.builder, self.module, self.printf, p[2])
         
-        @self.pg.production('conditional_expression : TRUE')
-        @self.pg.production('conditional_expression : FALSE')
         @self.pg.production('conditional_expression : expression GREATER_THAN expression')
         @self.pg.production('conditional_expression : expression LESS_THAN expression')
         @self.pg.production('conditional_expression : expression GREATER_THAN_EQUALS expression')
@@ -157,6 +155,14 @@ class Parser():
                 right = p[2]
                 operator = p[1].value
                 return ast_1.RelationalStatement(self.builder, self.module, left, right, operator)
+            
+        @self.pg.production('conditional_expression : TRUE')
+        @self.pg.production('conditional_expression : FALSE')
+        def boolean_expression(p):
+            if (p[0].value == 'fax'):
+                return ast_1.Number(self.builder, self.module, 1)
+            elif (p[0].value == 'cap'):
+                return ast_1.Number(self.builder, self.module, 0)
 
         @self.pg.production('expression : expression SUM expression')
         @self.pg.production('expression : expression SUB expression')
