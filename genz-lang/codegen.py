@@ -49,10 +49,14 @@ class CodeGen():
         self.builder.ret_void()
         llvm_ir = str(self.module)
         print('LLVM', llvm_ir)
-        mod = self.binding.parse_assembly(llvm_ir)
-        mod.verify()
-        # Now add the module and make sure it is ready for execution
-        self.engine.add_module(mod)
+        mod = None
+        try:
+            mod = self.binding.parse_assembly(llvm_ir)
+            mod.verify()
+            # Now add the module and make sure it is ready for execution
+            self.engine.add_module(mod)
+        except:
+            print("LLVM Exception")
         self.engine.finalize_object()
         self.engine.run_static_constructors()
         return mod

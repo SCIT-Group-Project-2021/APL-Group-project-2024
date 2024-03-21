@@ -1,4 +1,4 @@
-isItReally (23 >= 18) {
+isItReally (23 <= 18) {
     print(1).
 } orIsIt {
     print(0).

@@ -48,6 +48,7 @@ class Parser():
         @self.pg.production('block_statement : print_statement')
         @self.pg.production('block_statement : var_declaration')
         @self.pg.production('block_statement : initialization')
+        @self.pg.production('statement : function_call')
         def block_statement(p):
             return p[0]
         
@@ -59,6 +60,7 @@ class Parser():
         @self.pg.production('statement : var_declaration')
         @self.pg.production('statement : initialization')
         @self.pg.production('statement : function_declaration')
+        @self.pg.production('statement : function_call')
         def statement(p):
             return p[0]
     
@@ -66,7 +68,7 @@ class Parser():
         @self.pg.production('function_declaration : data_type IDENTIFIER OPEN_PAREN CLOSE_PAREN OPEN_CURL_BRACE block_statements CLOSE_CURL_BRACE')
         def function_declaration(p):
             parameters = p[3] if len(p) == 8 else []
-            return ast_1.FunctionDeclaration(self.builder, self.module, p[0], p[1].getstr(), parameters, p[-2])
+            return ast_1.FunctionDeclaration(self.module, p[0], p[1].getstr(), parameters, p[-2])
         
         @self.pg.production('parameters : parameter COMMA parameters')
         @self.pg.production('parameters : parameter')
@@ -74,12 +76,32 @@ class Parser():
             if len(p) == 1:
                 return [p[0]]
             else:
-                return self.remove_duplicates([p[0]] + [p[1]])
+                return self.remove_duplicates([p[0]] + [p[2]])
         
         @self.pg.production('parameter : data_type IDENTIFIER')
         def parameter(p):
             return ast_1.Parameter(p[0], p[1])
         
+        @self.pg.production('function_call : IDENTIFIER OPEN_PAREN arguments CLOSE_PAREN TERMINATOR')
+        @self.pg.production('function_call : IDENTIFIER OPEN_PAREN CLOSE_PAREN TERMINATOR')
+        def function_call(p):
+            if(len(p) == 4):
+                return ast_1.FunctionCall(self.builder, self.module, p[0])
+            else:
+                return ast_1.FunctionCall(self.builder, self.module, p[0], p[2])
+            
+        @self.pg.production('arguments : arguments COMMA arguments')
+        @self.pg.production('arguments : argument')
+        def arguments(p):
+            if len(p) == 1:
+                return [p[0]]
+            else:
+                return self.remove_duplicates([p[0]] + [p[1]])
+        
+        @self.pg.production('argument : expression')
+        def argument(p):
+            return p[0]
+            
         @self.pg.production('data_type : TYPE_INT')
         @self.pg.production('data_type : TYPE_VOID')
         @self.pg.production('data_type : TYPE_BOOLEAN')
@@ -108,7 +130,7 @@ class Parser():
         
         @self.pg.production('var_declaration : data_type IDENTIFIER TERMINATOR')
         def var_declaration(p):
-            return ast_1.VarDeclaration(self.builder, self.module, p[0], p[1].getstr())
+            return ast_1.VarDeclaration(self.builder, p[0], p[1].getstr())
         
         @self.pg.production('return_statement : RETURN expression TERMINATOR')
         def return_statement(p):

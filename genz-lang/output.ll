@@ -5,21 +5,21 @@ target datalayout = ""
 define void @"main"()
 {
 entry:
-  %"compare_ge" = icmp sge i8 23, 18
-  br i1 %"compare_ge", label %"entry.if", label %"entry.else"
-entry.if:
-  %".3" = bitcast [5 x i8]* @"fstr-$12761" to i8*
-  %".4" = call i32 (i8*, ...) @"printf"(i8* %".3", i8 1)
-  br label %"entry.endif"
-entry.else:
-  %".6" = bitcast [5 x i8]* @"fstr-$86052" to i8*
-  %".7" = call i32 (i8*, ...) @"printf"(i8* %".6", i8 0)
-  br label %"entry.endif"
-entry.endif:
+  %".2" = add i8 5, 4
+  %".3" = sdiv i8 %".2", 2
+  %".4" = bitcast [5 x i8]* @"fstr-$84313" to i8*
+  %".5" = call i32 (i8*, ...) @"printf"(i8* %".4", i8 %".3")
+  %".6" = mul i8 6, 7
+  %".7" = bitcast [5 x i8]* @"fstr-$57934" to i8*
+  %".8" = call i32 (i8*, ...) @"printf"(i8* %".7", i8 %".6")
+  %".9" = mul i8 7, 8
+  %".10" = bitcast [5 x i8]* @"fstr-$38526" to i8*
+  %".11" = call i32 (i8*, ...) @"printf"(i8* %".10", i8 %".9")
   ret void
 }
 
 declare i32 @"printf"(i8* %".1", ...)
 
-@"fstr-$12761" = internal constant [5 x i8] c"%i \0a\00"
-@"fstr-$86052" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$84313" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$57934" = internal constant [5 x i8] c"%i \0a\00"
+@"fstr-$38526" = internal constant [5 x i8] c"%i \0a\00"
