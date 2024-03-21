@@ -179,10 +179,9 @@ class Parser():
         def number(p):
             return ast_1.Number(self.builder, self.module, p[0].value)
         
-        @self.pg.production('identifier : IDENTIFIER')
-        @self.pg.production('expression : identifier')
+        @self.pg.production('expression : IDENTIFIER')
         def identifier(p):
-            return p[0]
+            return ast_1.Identifier(self.builder, self.module, p[0].value)
         
         @self.pg.production('expression : OPEN_PAREN expression CLOSE_PAREN')
         def parenthesized_expression(p):

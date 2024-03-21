@@ -1,4 +1,3 @@
-from tokenize import Token
 from llvmlite import ir
 import random
 
@@ -39,7 +38,6 @@ class FunctionDeclaration():
 
     def eval(self):
         # Define function signature
-        print("Paramters", self.parameters)
         llvm_return_type = self.get_llvm_type(self.return_type)
         param_types = [self.get_llvm_type(param.data_type) for param in self.parameters]
         func_type = ir.FunctionType(llvm_return_type, param_types)
@@ -252,8 +250,6 @@ class WhileStatement():
         self.body = body
 
     def eval(self):
-        preheader_block = self.builder.block
-
         loop = self.builder.append_basic_block('loop')
         self.builder.branch(loop)
         self.builder.position_at_start(loop)
@@ -271,6 +267,22 @@ class WhileStatement():
         new_block = self.builder.append_basic_block('afterloop')
         self.builder.position_at_start(new_block)
 
+class Identifier():
+    def __init__(self, builder, module, name):
+        self.builder = builder
+        self.module = module
+        self.name = name
+
+    def eval(self):
+        # Look for alloca instruction of the identifier
+        identifier_name = self.name
+        for bb in self.builder.function.blocks:
+            for instr in bb.instructions:
+                if isinstance(instr, ir.AllocaInstr) and instr.name == identifier_name:
+                    return self.builder.load(instr)
+
+        # If identifier is not found, raise an error
+        raise ValueError(f"Identifier '{identifier_name}' not declared in the current scope")
 
 class Number():
     def __init__(self, builder, module, value):
