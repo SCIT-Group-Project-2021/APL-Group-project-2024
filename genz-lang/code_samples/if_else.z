@@ -1,5 +1,6 @@
-isItReally (23 >= 18) {
-    print(1).
+int age = 21.
+isItReally (age >= 18) {
+    print(fax).
 } orIsIt {
-    print(0).
+    print(cap).
 }

@@ -2,21 +2,22 @@ from llvmlite import ir
 import random
 
 class VarDeclaration():
-    def __init__(self, builder, module, data_type, target):
+    def __init__(self, builder, data_type, target):
         self.builder = builder
-        self.module = module
         self.data_type = data_type
         self.target = target
 
     def eval(self):
         llvm_type = self.get_llvm_type(self.data_type)
         variable_name = self.target
-        # Check if variable is already declared
-        if variable_name not in self.module.globals:  
-            ptr = self.builder.alloca(llvm_type, name=variable_name)
-            self.module.globals[variable_name] = ptr
-        else:
-            raise ValueError(f"Variable '{variable_name}' is already declared")
+        # Check if variable is already declared (local to function)
+        for bb in self.builder.function.blocks:
+            for instr in bb.instructions:
+                if isinstance(instr, ir.AllocaInstr) and instr.name == variable_name:
+                    raise ValueError(f"Variable '{variable_name}' is already declared in the function")
+        # Allocate memory for the variable
+        ptr = self.builder.alloca(llvm_type, name=variable_name)
+        return ptr
 
     def get_llvm_type(self, data_type):
         if data_type == "int":
@@ -28,8 +29,7 @@ class VarDeclaration():
 
 
 class FunctionDeclaration():
-    def __init__(self, builder, module, return_type, name, parameters, body):
-        self.builder = builder
+    def __init__(self, module, return_type, name, parameters, body):
         self.module = module
         self.return_type = return_type
         self.name = name
@@ -44,13 +44,15 @@ class FunctionDeclaration():
         function = ir.Function(self.module, func_type, name=self.name)
 
         # Create entry block
-        block = function.append_basic_block(name="entry")
-        self.builder.position_at_start(block)
+        block = function.append_basic_block(name="function")
+        builder = ir.IRBuilder(block)
 
         # Evaluate function body
         return_statement_seen = False
         print("body", self.body)
         for statement in self.body:
+            # TODO: Find a better way to pass function builder for nested AST nodes
+            statement.builder = builder
             statement.eval()
             if isinstance(statement, ReturnStatement):
                 return_statement_seen = True
@@ -60,9 +62,9 @@ class FunctionDeclaration():
             raise ValueError(f"Function '{self.name}' must have a return statement")
 
         # Ensure the last instruction is a terminator
-        if not self.builder.block.is_terminated:
+        if not builder.block.is_terminated:
             if llvm_return_type == ir.VoidType():
-                self.builder.ret_void()
+                builder.ret_void()
 
         print("Function", function)
         return function
@@ -76,6 +78,32 @@ class FunctionDeclaration():
             return ir.IntType(1)
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
+        
+class FunctionCall:
+    def __init__(self, builder, module, name, arguments = None):
+        self.builder = builder
+        self.module = module
+        self.name = name.getstr()
+        self.arguments = arguments
+
+    def eval(self):
+        # Retrieve the function from the module
+        function = self.module.get_global(self.name)
+
+        if function is None:
+            raise ValueError(f"Function '{self.name}' does not exist")
+
+        if (self.arguments):
+            # Ensure the number of arguments matches the function signature
+            if len(self.arguments) != len(function.function_type.args):
+                raise ValueError(f"Number of arguments mismatch for function '{self.name}'")
+
+            # Prepare the arguments
+            llvm_arguments = [arg.eval() for arg in self.arguments]
+
+            # Generate the method call instruction
+            return self.builder.call(function, llvm_arguments)
+        return self.builder.call(function, [])
         
 class Parameter():
     def __init__(self, data_type, name):
@@ -99,7 +127,7 @@ class Assignment():
     def __init__(self, builder, module, target, value):
         self.builder = builder
         self.module = module
-        self.target = target
+        self.target = target.getstr()
         self.value = value
 
     def eval(self):
@@ -108,9 +136,20 @@ class Assignment():
             self.builder.store(value, self.target)
         else:
             # If target is an identifier, lookup its LLVM value and assign
-            ptr = self.builder.alloca(value.type)
+            target_name = self.target
+            found = False
+            for bb in self.builder.function.blocks:
+                for instr in bb.instructions:
+                    if isinstance(instr, ir.AllocaInstr) and instr.name == target_name:
+                        ptr = instr
+                        found = True
+                        break
+                if found:
+                    break
+            if not found:
+                raise ValueError(f"Variable '{target_name}' not declared before assignment")
             self.builder.store(value, ptr)
-            self.module.globals[self.target] = ptr
+
 
 class Initialization():
     def __init__(self, builder, module, data_type, target, value):
@@ -124,13 +163,16 @@ class Initialization():
         llvm_type = self.get_llvm_type(self.data_type)
         value = self.value.eval()
 
-        # Check for type mismatch
-        if llvm_type != value.type:
-            raise ValueError(f"Type mismatch: Cannot initialize '{self.target}' of type '{llvm_type}' with value of type '{value.type}'")
-        
-        ptr = self.builder.alloca(llvm_type)
+        # Check if the variable is already declared
+        target_name = self.target
+        for bb in self.builder.function.blocks:
+            for instr in bb.instructions:
+                if isinstance(instr, ir.AllocaInstr) and instr.name == target_name:
+                    raise ValueError(f"Variable '{target_name}' is already declared")
+
+        # Allocate memory for the variable
+        ptr = self.builder.alloca(llvm_type, name=target_name)
         self.builder.store(value, ptr)
-        self.module.globals[self.target] = ptr
 
     def get_llvm_type(self, data_type):
         if data_type == "int":
@@ -203,30 +245,52 @@ class IfElseStatement():
 class WhileStatement():
     def __init__(self, builder, module, condition, body):
         self.builder = builder
-        self.module = module
         self.condition = condition
         self.body = body
 
     def eval(self):
-        preheader_block = self.builder.block
-
         loop = self.builder.append_basic_block('loop')
+        body_block = self.builder.append_basic_block('body')
+        afterloop_block = self.builder.append_basic_block('afterloop')
+
+        # Branch to the loop condition evaluation
         self.builder.branch(loop)
         self.builder.position_at_start(loop)
 
+        # Evaluate the loop condition
+        self.builder.position_at_end(loop)
         cond = self.condition.eval()
-        self.builder.cbranch(cond, loop, self.builder.block)
 
-        self.builder.position_at_start(self.builder.block)
+        # Branch to the body or afterloop based on the condition
+        self.builder.cbranch(cond, body_block, afterloop_block)
 
+        # Generate code for the loop body
+        self.builder.position_at_start(body_block)
         for statement in self.body:
             statement.eval()
 
+        # Branch back to the loop condition evaluation
         self.builder.branch(loop)
 
-        new_block = self.builder.append_basic_block('afterloop')
-        self.builder.position_at_start(new_block)
+        # Move to afterloop
+        self.builder.position_at_start(afterloop_block)
 
+class Identifier():
+    def __init__(self, builder, module, name):
+        self.builder = builder
+        self.module = module
+        self.name = name
+
+    def eval(self):
+        # Look for alloca instruction of the identifier
+        identifier_name = self.name
+        for bb in self.builder.function.blocks:
+            for instr in bb.instructions:
+                if isinstance(instr, ir.AllocaInstr) and instr.name == identifier_name:
+                    return self.builder.load(instr)
+
+        # If identifier is not found, raise an error
+        raise ValueError(f"Identifier '{identifier_name}' not declared in the current scope")
 
 class Number():
     def __init__(self, builder, module, value):
@@ -273,6 +337,7 @@ class Print():
         self.value = value
 
     def eval(self):
+        self.value.builder = self.builder
         value = self.value.eval()
 
         # Declare argument list
