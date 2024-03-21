@@ -245,27 +245,35 @@ class IfElseStatement():
 class WhileStatement():
     def __init__(self, builder, module, condition, body):
         self.builder = builder
-        self.module = module
         self.condition = condition
         self.body = body
 
     def eval(self):
         loop = self.builder.append_basic_block('loop')
+        body_block = self.builder.append_basic_block('body')
+        afterloop_block = self.builder.append_basic_block('afterloop')
+
+        # Branch to the loop condition evaluation
         self.builder.branch(loop)
         self.builder.position_at_start(loop)
 
+        # Evaluate the loop condition
+        self.builder.position_at_end(loop)
         cond = self.condition.eval()
-        self.builder.cbranch(cond, loop, self.builder.block)
 
-        self.builder.position_at_start(self.builder.block)
+        # Branch to the body or afterloop based on the condition
+        self.builder.cbranch(cond, body_block, afterloop_block)
 
+        # Generate code for the loop body
+        self.builder.position_at_start(body_block)
         for statement in self.body:
             statement.eval()
 
+        # Branch back to the loop condition evaluation
         self.builder.branch(loop)
 
-        new_block = self.builder.append_basic_block('afterloop')
-        self.builder.position_at_start(new_block)
+        # Move to afterloop
+        self.builder.position_at_start(afterloop_block)
 
 class Identifier():
     def __init__(self, builder, module, name):
