@@ -1,0 +1,46 @@
+<div style=" flex-grow:1; display:flex; flex-direction: column;height: 100vh">
+    <mat-toolbar color="primary">
+        <span class="spacer"></span>
+        <button mat-icon-button color="white">
+            <mat-icon>
+                play_arrow
+            </mat-icon>
+        </button>
+        <button mat-icon-button color="white">
+            <mat-icon>check_box_outline_blank</mat-icon>
+        </button>
+        <button mat-icon-button color="white">
+            <mat-icon>
+                download
+            </mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <mat-tab-group class="editor_Window" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent="true">
+        <mat-tab label="First"> 
+            <ng-template mat-tab-label>
+                {{file[0].title}}
+                <button style="pointer-events: auto"  (click)="$event.stopPropagation()" mat-icon-button>
+                    <mat-icon>
+                        close
+                    </mat-icon>
+                </button>
+            </ng-template>
+            <div class="code-editor">
+                <ngs-code-editor [theme]="theme" [codeModel]="model" [options]="options" style="height: 100%; width:50%"/>
+            </div>
+        </mat-tab>
+            
+        <mat-tab label="Third"> 
+            <ng-template mat-tab-label>
+                {{file[0].title}}
+                <button style="pointer-events: auto"  (click)="$event.stopPropagation()" mat-icon-button>
+                    <mat-icon>
+                        close
+                    </mat-icon>
+                </button>
+            </ng-template>
+                <ngs-code-editor  [theme]="theme" [codeModel]="model" [options]="options"/>
+        </mat-tab>
+    </mat-tab-group>
+</div>

@@ -1,0 +1,16 @@
+.editor_Window {
+    display: flex;
+    flex-grow: 1;
+}
+
+span {
+    flex-grow: 1;
+}
+
+::ng-deep .mat-mdc-tab-body-wrapper { flex-grow: 1; }
+
+
+.code-editor {
+    height: 100%;
+    background-color: red;
+}

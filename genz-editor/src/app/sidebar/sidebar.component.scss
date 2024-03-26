@@ -1,0 +1,25 @@
+.navBar {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    width: 250px; /* Fixed width */
+    background-color: primary;
+    padding: 25px;
+}
+
+.aligned-with-icon{
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 5px; /* optional */
+}
+
+button {
+    margin-bottom: 25px;
+}
+
+mat-divider {
+    margin-bottom: 25px;
+}
+    
+    
+

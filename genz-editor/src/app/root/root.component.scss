@@ -1,0 +1,27 @@
+
+.container {
+    height: 100vh;
+    width: 100vw;
+}
+
+span {
+    flex-grow: 1;
+}
+
+.expander {
+    align-self: center;
+    position: absolute;
+    margin-top: 50vh;
+    z-index: 100;
+    margin-left: -25px;
+}
+
+.chatGPT {
+    align-self: flex-end;
+    justify-self: end;
+    position: absolute;
+    margin-top: 90vh;
+    z-index: 100;
+    margin-left: 95%;
+}
+

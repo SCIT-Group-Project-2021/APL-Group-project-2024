@@ -21,14 +21,9 @@ class Lexer():
         self.lexer.add('ELSE', r'orIsIt')
         
         self.lexer.add('RETURN', r'sayLess')
-        # Ignore spaces
-        self.lexer.ignore('\s+')
         
-        
-        
-        self.lexer.add('FLOAT', 'NUM+.NUM+')
-        self.lexer.add('INT', 'NUM+')
-        self.lexer.add('NUM', '\d')
+        self.lexer.add('FLOAT', '\d+.\d+')
+        self.lexer.add('INT', '\d+')
         self.lexer.add('STRING', "[a-zA-Z_][a-zA-Z0-9_]+")
         self.lexer.add('CHAR', "[a-zA-Z_]")
         
@@ -56,6 +51,9 @@ class Lexer():
         self.lexer.add('SUB', r'\-')
         self.lexer.add('GREATER', r'\>')
         self.lexer.add('LESS', r'\<')
+        
+        # Ignore spaces
+        self.lexer.ignore('\s+')
         
     def get_lexer(self):
         self._add_tokens()

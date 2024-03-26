@@ -1,0 +1,17 @@
+<mat-drawer-container class="container" autosize>
+    <mat-drawer #drawer mode="side">
+        <app-sidebar></app-sidebar>
+    </mat-drawer>
+
+    <button class="expander" type="button" mat-fab (click)="drawer.toggle();rotate()" >
+        <div style="width: 15px;"></div><mat-icon [@rotatedState]='state' iconPositionEnd="True">chevron_right</mat-icon>
+    </button>
+
+    <button class="chatGPT" type="button" mat-fab color="primary">
+        <mat-icon iconPositionEnd="True">
+            account_circle
+        </mat-icon>
+    </button>
+    <app-editor/>
+    
+</mat-drawer-container> 
