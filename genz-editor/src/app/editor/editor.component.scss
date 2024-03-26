@@ -12,5 +12,11 @@ span {
 
 .code-editor {
     height: 100%;
-    background-color: red;
+    flex-grow: 1;
+    overflow: hidden;
 }
+
+mat-tab-label {
+    color:white;
+}
+

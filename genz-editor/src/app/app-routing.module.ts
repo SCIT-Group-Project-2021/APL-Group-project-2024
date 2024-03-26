@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path: '',
     component: RootComponent,
-    title: 'root'
+    title: 'Genz Edit'
   },
   {
     path: 'editor',

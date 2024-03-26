@@ -15,32 +15,29 @@
             </mat-icon>
         </button>
     </mat-toolbar>
-
-    <mat-tab-group class="editor_Window" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent="true">
-        <mat-tab label="First"> 
+    <mat-tab-group class="editor_Window" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent="false" color="accent" [selectedIndex]="selected"
+    (selectedIndexChange)="selected = ($event); swapEditor(selected); printIndex(selected)">
+        <mat-tab *ngFor="let files of file; let x = index;"> 
             <ng-template mat-tab-label>
-                {{file[0].title}}
-                <button style="pointer-events: auto"  (click)="$event.stopPropagation()" mat-icon-button>
+                {{file[x].title}}
+                <button style="pointer-events: auto"  (click)="$event.stopPropagation(); removeTab(x)" mat-icon-button>
                     <mat-icon>
                         close
                     </mat-icon>
                 </button>
             </ng-template>
-            <div class="code-editor">
-                <ngs-code-editor [theme]="theme" [codeModel]="model" [options]="options" style="height: 100%; width:50%"/>
-            </div>
-        </mat-tab>
-            
-        <mat-tab label="Third"> 
+        </mat-tab> 
+        <mat-tab disabled="true"> 
             <ng-template mat-tab-label>
-                {{file[0].title}}
-                <button style="pointer-events: auto"  (click)="$event.stopPropagation()" mat-icon-button>
+                <button style="pointer-events: auto"  (click)="$event.stopPropagation(); addTab(true)" mat-icon-button>
                     <mat-icon>
-                        close
+                        add
                     </mat-icon>
                 </button>
             </ng-template>
-                <ngs-code-editor  [theme]="theme" [codeModel]="model" [options]="options"/>
         </mat-tab>
     </mat-tab-group>
+    <mat-card class="code-editor">
+        <ngs-code-editor [theme]="theme" [codeModel]="model" [options]="options" (valueChanged)="onCodeChanged($event)" style="height: 100%;"/>
+    </mat-card>
 </div>
