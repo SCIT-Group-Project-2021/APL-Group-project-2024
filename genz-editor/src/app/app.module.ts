@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { CodeEditorModule } from '@ngstack/code-editor';
+import { TerminalModule } from 'primeng/terminal'; 
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { CodeEditorModule } from '@ngstack/code-editor';
     MatBottomSheetModule,
     MatButtonModule,
     CodeEditorModule.forRoot(),
-    MatCardModule
+    MatCardModule,
+    TerminalModule
   ],
   providers: [
     provideClientHydration(),

@@ -19,6 +19,7 @@ export class RootComponent {
   
 
   state: string = 'default';
+  isVisible: any;
 
   rotate() {
     this.state = (this.state === 'default' ? 'rotated' : 'default');
@@ -27,6 +28,10 @@ export class RootComponent {
   constructor() { }
   
   public editor!: EditorComponent;
+
+  toggleTerminal() {
+    this.isVisible = !this.isVisible;
+  }
 
   addTab() {
     this.editor.addTab(true);
