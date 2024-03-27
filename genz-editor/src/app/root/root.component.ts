@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +16,20 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class RootComponent {
 
+  
+
   state: string = 'default';
 
   rotate() {
     this.state = (this.state === 'default' ? 'rotated' : 'default');
+  }
+
+  constructor() { }
+  
+  public editor!: EditorComponent;
+
+  addTab() {
+    this.editor.addTab(true);
   }
 
 }

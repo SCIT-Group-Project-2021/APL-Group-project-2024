@@ -22,7 +22,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 import { CodeEditorModule } from '@ngstack/code-editor';
-import { EditortabComponent } from './editortab/editortab.component';
 
 
 @NgModule({
@@ -31,8 +30,7 @@ import { EditortabComponent } from './editortab/editortab.component';
     EditorComponent, 
     SidebarComponent,
     TerminalComponent,
-    RootComponent,
-    EditortabComponent
+    RootComponent
   ],
   imports: [
     BrowserModule,
