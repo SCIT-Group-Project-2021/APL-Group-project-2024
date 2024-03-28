@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs'; 
 import { TerminalService } from 'primeng/terminal'; 
+import { CompilerServiceService } from '../compiler-service.service';
 
 @Component({
   selector: 'app-terminal',
@@ -12,25 +13,26 @@ export class TerminalComponent {
   subscription!: Subscription; 
   response: string = "";
   parserOutput: string = "This is the Parsers output";
+  compilerOutput: any;
   
   
-  constructor(private terminalService: TerminalService) { 
+  constructor(private terminalService: TerminalService, private compiler: CompilerServiceService) { 
     this.terminalService.commandHandler.subscribe(command => { 
       this.checkCommand(command)//function that calls functions, see case
     }); 
   }
-
 
   checkCommand(command: string) {
     //execute actual useful functions here and place the output into response
     console.log(command)
       switch (command) {
         case "run":
-          
-          //function to parse code
 
-          //command to print parser output, swap text for variable with text
-          this.response = this.parserOutput
+          this.compiler.getDatawithoutsub().subscribe(async (res) => {
+            this.response = JSON.stringify(res);
+            await this.terminalService.sendResponse(this.response); 
+          })
+          
           break;
 
         case "break":
