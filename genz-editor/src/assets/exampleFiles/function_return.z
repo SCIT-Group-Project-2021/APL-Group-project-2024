@@ -1,0 +1,4 @@
+int Sum(int a, int b) {
+    sayLess a + b.
+}
+Sum(2,4).

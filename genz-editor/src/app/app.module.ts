@@ -23,6 +23,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { TerminalModule } from 'primeng/terminal'; 
+import { saveAs } from 'file-saver';
 
 
 @NgModule({

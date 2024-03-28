@@ -1,5 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { CodeModel } from '@ngstack/code-editor';
+import saveAs from 'file-saver';
+import { CrosscallService } from '../crosscall.service';
+import { File } from 'buffer';
+import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-editor',
@@ -7,6 +12,21 @@ import { CodeModel } from '@ngstack/code-editor';
   styleUrl: './editor.component.scss'
 })
 export class EditorComponent {
+
+  readonly file_url = 'assets/exampleFiles/'
+
+  clickEventsubscription!:Subscription 
+  
+  constructor(private crosscallService:CrosscallService,private http: HttpClient) { 
+    this.clickEventsubscription = this.crosscallService.getloadFileEvent().subscribe((value)=>{
+      console.log(value)
+      this.loadFile(true,value);
+    })
+  }
+
+  runProgram() {
+    this.crosscallService.sendClickEvent();
+  }
 
   file = [
     {
@@ -30,10 +50,8 @@ export class EditorComponent {
     }
   };
   
-  
-
   onCodeChanged(value: any) {
-    console.log('CODE', value);
+    console.log(value);
     this.file[this.selected].model.value = value
   }
   selected = 0;
@@ -50,6 +68,26 @@ export class EditorComponent {
 
     if (selectAfterAdding) {
       this.selected = (this.file.length - 1);
+    }
+  }
+
+  loadFile(selectAfterAdding: boolean,file?: any) {
+    this.http.get(this.file_url + file, {responseType: 'text'} )
+        .subscribe(data => {
+          console.log(data)
+          this.file.push( {
+            title: "file#" + (1+this.file.length) +".z",
+            model: {
+              language: 'c',
+              uri: 'main.json',
+              value: data
+            }
+          });
+        });
+    
+
+    if (selectAfterAdding) {
+      this.selected = (this.file.length-1);
     }
   }
 
@@ -86,5 +124,16 @@ export class EditorComponent {
   printIndex(x:number) {
     console.log('Current index = ', x, "final index = ", this.file.length)
   }
+
+  saveFile() {
+    const blob = 
+        new Blob(
+          [this.file[this.selected].model.value], 
+                 {type: "text/plain;charset=utf-8"});
+    saveAs(blob, this.file[this.selected].title +'.txt');
+
+  }
+
+
 
 }
