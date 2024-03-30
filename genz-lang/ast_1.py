@@ -1,6 +1,33 @@
 from llvmlite import ir
 import random
 
+stack = [{}]
+program_builder = [None]
+class SymbolTable:
+    def push_scope(self):
+        stack.append({})
+
+    def push_builder(self, builder):
+        program_builder.append(builder)
+       
+    def pop_scope(self):
+        stack.pop()
+
+    def pop_builder(self):
+        program_builder.pop()
+        
+    def declare_variable(self, name, llvm_type):
+        current_scope = stack[-1]
+        if name in current_scope:
+            raise ValueError(f"Variable '{name}' already declared in this scope")
+        current_scope[name] = llvm_type
+
+    def lookup_variable(self, name):
+        for scope in reversed(stack):
+            if name in scope:
+                return scope[name]
+        raise ValueError(f"Variable '{name}' not found")
+
 class VarDeclaration():
     def __init__(self, builder, data_type, target):
         self.builder = builder
@@ -8,6 +35,7 @@ class VarDeclaration():
         self.target = target
 
     def eval(self):
+        symbol_table = SymbolTable()
         llvm_type = self.get_llvm_type(self.data_type)
         variable_name = self.target
         # Check if variable is already declared (local to function)
@@ -17,6 +45,7 @@ class VarDeclaration():
                     raise ValueError(f"Variable '{variable_name}' is already declared in the function")
         # Allocate memory for the variable
         ptr = self.builder.alloca(llvm_type, name=variable_name)
+        symbol_table.declare_variable(variable_name, ptr)
         return ptr
 
     def get_llvm_type(self, data_type):
@@ -37,6 +66,9 @@ class FunctionDeclaration():
         self.body = body
 
     def eval(self):
+        symbol_table = SymbolTable()
+        symbol_table.push_scope()
+
         # Define function signature
         llvm_return_type = self.get_llvm_type(self.return_type)
         param_types = [self.get_llvm_type(param.data_type) for param in self.parameters]
@@ -47,15 +79,30 @@ class FunctionDeclaration():
         block = function.append_basic_block(name="function")
         builder = ir.IRBuilder(block)
 
+        symbol_table.push_builder(builder)
+        
+        # Allocate space for parameters and store their values
+        arg_values = []
+
+        for llvm_arg, param in zip(function.args, self.parameters):
+            llvm_arg.name = param.name
+            arg_values.append(llvm_arg)
+            # Allocate space for parameter and store its value
+            alloca = builder.alloca(llvm_arg.type)
+            builder.store(llvm_arg, alloca)
+            symbol_table.declare_variable(param.name, alloca)
+            
         # Evaluate function body
         return_statement_seen = False
-        print("body", self.body)
+        print("function body", self.body)
         for statement in self.body:
             # TODO: Find a better way to pass function builder for nested AST nodes
             statement.builder = builder
             statement.eval()
             if isinstance(statement, ReturnStatement):
                 return_statement_seen = True
+        
+        symbol_table.pop_scope()
 
         # Ensure return statement for non-void functions
         if llvm_return_type != ir.VoidType() and not return_statement_seen:
@@ -65,8 +112,6 @@ class FunctionDeclaration():
         if not builder.block.is_terminated:
             if llvm_return_type == ir.VoidType():
                 builder.ret_void()
-
-        print("Function", function)
         return function
 
     def get_llvm_type(self, data_type):
@@ -117,6 +162,7 @@ class ReturnStatement():
         self.value = value
 
     def eval(self):
+        self.value.builder = self.builder
         if self.value:
             return_value = self.value.eval()
             self.builder.ret(return_value)
@@ -136,20 +182,12 @@ class Assignment():
             self.builder.store(value, self.target)
         else:
             # If target is an identifier, lookup its LLVM value and assign
-            target_name = self.target
-            found = False
-            for bb in self.builder.function.blocks:
-                for instr in bb.instructions:
-                    if isinstance(instr, ir.AllocaInstr) and instr.name == target_name:
-                        ptr = instr
-                        found = True
-                        break
-                if found:
-                    break
-            if not found:
-                raise ValueError(f"Variable '{target_name}' not declared before assignment")
-            self.builder.store(value, ptr)
-
+            symbol_table = SymbolTable()
+            ptr = symbol_table.lookup_variable(self.target)
+            if isinstance(ptr, ir.AllocaInstr):
+                self.builder.store(value, ptr)
+            else:
+                raise ValueError(f"Variable '{self.target}' not declared before assignment")
 
 class Initialization():
     def __init__(self, builder, module, data_type, target, value):
@@ -160,19 +198,19 @@ class Initialization():
         self.value = value
 
     def eval(self):
+        symbol_table = SymbolTable()
         llvm_type = self.get_llvm_type(self.data_type)
         value = self.value.eval()
 
         # Check if the variable is already declared
         target_name = self.target
-        for bb in self.builder.function.blocks:
-            for instr in bb.instructions:
-                if isinstance(instr, ir.AllocaInstr) and instr.name == target_name:
-                    raise ValueError(f"Variable '{target_name}' is already declared")
+        if target_name in stack[-1]:  # Check in the current scope
+            raise ValueError(f"Variable '{target_name}' is already declared")
 
         # Allocate memory for the variable
         ptr = self.builder.alloca(llvm_type, name=target_name)
         self.builder.store(value, ptr)
+        symbol_table.declare_variable(target_name, ptr)
 
     def get_llvm_type(self, data_type):
         if data_type == "int":
@@ -282,16 +320,15 @@ class Identifier():
         self.name = name
 
     def eval(self):
+        symbol_table = SymbolTable()
         # Look for alloca instruction of the identifier
-        identifier_name = self.name
-        for bb in self.builder.function.blocks:
-            for instr in bb.instructions:
-                if isinstance(instr, ir.AllocaInstr) and instr.name == identifier_name:
-                    return self.builder.load(instr)
+        ptr = symbol_table.lookup_variable(self.name)
 
-        # If identifier is not found, raise an error
-        raise ValueError(f"Identifier '{identifier_name}' not declared in the current scope")
-
+        if isinstance(ptr, ir.AllocaInstr):
+            return self.builder.load(ptr)
+        else:
+            raise ValueError(f"Identifier '{self.name}' not declared in the current scope")
+        
 class Number():
     def __init__(self, builder, module, value):
         self.builder = builder
@@ -308,24 +345,33 @@ class BinaryOp():
         self.module = module
         self.left = left
         self.right = right
-
+    
+    def set_builder(self):
+        if(program_builder[-1]):
+            self.builder = program_builder[-1]
+            self.left.builder = program_builder[-1]
+            self.right.builder = program_builder[-1]
 
 class Sum(BinaryOp):
     def eval(self):
+        self.set_builder()
         i = self.builder.add(self.left.eval(), self.right.eval())
         return i
 class Sub(BinaryOp):
     def eval(self):
+        self.set_builder()
         i = self.builder.sub(self.left.eval(), self.right.eval())
         return i
     
 class Mul(BinaryOp):
     def eval(self):
+        self.set_builder()
         i = self.builder.mul(self.left.eval(), self.right.eval())
         return i
 
 class Div(BinaryOp):
     def eval(self):
+        self.set_builder()
         i = self.builder.sdiv(self.left.eval(), self.right.eval())
         return i
 

@@ -80,7 +80,7 @@ class Parser():
         
         @self.pg.production('parameter : data_type IDENTIFIER')
         def parameter(p):
-            return ast_1.Parameter(p[0], p[1])
+            return ast_1.Parameter(p[0], p[1].getstr())
         
         @self.pg.production('function_call : IDENTIFIER OPEN_PAREN arguments CLOSE_PAREN TERMINATOR')
         @self.pg.production('function_call : IDENTIFIER OPEN_PAREN CLOSE_PAREN TERMINATOR')
@@ -96,7 +96,7 @@ class Parser():
             if len(p) == 1:
                 return [p[0]]
             else:
-                return self.remove_duplicates([p[0]] + [p[1]])
+                return self.remove_duplicates([p[0]] + [p[2]])
         
         @self.pg.production('argument : expression')
         def argument(p):

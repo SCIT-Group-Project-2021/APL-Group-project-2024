@@ -1,0 +1,7 @@
+void PrintB() {
+    int b = 10.
+    print(b).
+}
+PrintB().
+int b = 11.
+print(b).
