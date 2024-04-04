@@ -1,4 +1,5 @@
 int Sum(int a, int b) {
-    sayLess a + b.
+    print(a + b).
+    sayLess 1.
 }
 Sum(2,4).

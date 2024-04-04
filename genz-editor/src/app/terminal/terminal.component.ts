@@ -58,7 +58,7 @@ export class TerminalComponent {
       await this.terminalService.sendResponse(this.response); 
     })*/
 
-    console.log(this.crosscallservice.getEditorData())
+    console.log("Editor data", this.crosscallservice.getEditorData())
     this.file = new File ([this.crosscallservice.getEditorData()],"gen.z");
     this.compiler.compileFIle(this.file).subscribe(async (res) => {
       this.response = JSON.stringify(res);
