@@ -23,4 +23,16 @@ export class CrosscallService {
   getloadFileEvent(): Observable<any>{ 
     return this.loadfile.asObservable();
   }
+
+  editorData !:  string;
+
+  sendEditorData(data: string) {
+    this.editorData=data;
+  }
+
+  getEditorData(): string{ 
+    return this.editorData;
+  }
+
+  
 }

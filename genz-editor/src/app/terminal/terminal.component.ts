@@ -16,13 +16,15 @@ export class TerminalComponent {
   parserOutput: string = "This is the Parsers output";
   compilerOutput: any;
   clickEventsubscription!:Subscription 
+  fileBlob !: Blob
+  file = new File (["Text"],"gen.z");
   
   
   constructor(public terminalService: TerminalService, private compiler: CompilerServiceService, private crosscallservice:CrosscallService) { 
     this.terminalService.commandHandler.subscribe(command => { 
       this.checkCommand(command)//function that calls functions, see case
     }); 
-    this.clickEventsubscription = this.crosscallservice.getClickEvent().subscribe(()=>{
+    this.clickEventsubscription = this.crosscallservice.getClickEvent().subscribe((data)=>{
       this.runProgram();
     })
   }
@@ -51,9 +53,17 @@ export class TerminalComponent {
 
   runProgram() {
     console.log("Running program")
-    this.compiler.getDatawithoutsub().subscribe(async (res) => {
+    /*this.compiler.getDatawithoutsub().subscribe(async (res) => {
       this.response = JSON.stringify(res);
       await this.terminalService.sendResponse(this.response); 
+    })*/
+
+    console.log(this.crosscallservice.getEditorData())
+    this.file = new File ([this.crosscallservice.getEditorData()],"gen.z");
+    this.compiler.compileFIle(this.file).subscribe(async (res) => {
+      this.response = JSON.stringify(res);
+      console.log(res)
+      //await this.terminalService.sendResponse(this.response); 
     })
   }
 

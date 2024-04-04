@@ -1,0 +1,6 @@
+<div *ngFor="let message of chatHistory">
+    {{ message }}
+</div>
+<input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()">
+<button (click)="sendMessage()">Send</button>
+  

@@ -15,7 +15,7 @@ export class EditorComponent {
 
   readonly file_url = 'assets/exampleFiles/'
 
-  clickEventsubscription!:Subscription 
+  clickEventsubscription!:Subscription
   
   constructor(private crosscallService:CrosscallService,private http: HttpClient) { 
     this.clickEventsubscription = this.crosscallService.getloadFileEvent().subscribe((value)=>{
@@ -49,12 +49,20 @@ export class EditorComponent {
       enabled: true
     }
   };
+
+  selected = this.file.length-1;
   
   onCodeChanged(value: any) {
-    console.log(value);
-    this.file[this.selected].model.value = value
+    try {
+      this.file[this.selected].model.value = value
+      this.crosscallService.sendEditorData(this.file[this.selected].model.value)
+      console.log("We have updated Data");
+    } catch (error) {
+      console.log("No data to swap to");
+    }
+    
   }
-  selected = 0;
+  
 
   addTab(selectAfterAdding: boolean) {
     this.file.push( {
@@ -65,16 +73,20 @@ export class EditorComponent {
         value: ''
       }
     });
+    console.log("Created new Tab");
 
     if (selectAfterAdding) {
       this.selected = (this.file.length - 1);
+    }
+    if (this.file.length-1 == 0) {
+      this.selected = (this.file.length);
+      console.log("Empty to new Tab");
     }
   }
 
   loadFile(selectAfterAdding: boolean,file?: any) {
     this.http.get(this.file_url + file, {responseType: 'text'} )
         .subscribe(data => {
-          console.log(data)
           this.file.push( {
             title: "file#" + (1+this.file.length) +".z",
             model: {
@@ -83,17 +95,33 @@ export class EditorComponent {
               value: data
             }
           });
+          if (selectAfterAdding) {
+            if (this.file.length == 0) {
+              this.selected = (this.file.length);
+            } else {
+              this.selected = (this.file.length-1);
+            }
+            
+          }
         });
     
-
-    if (selectAfterAdding) {
-      this.selected = (this.file.length-1);
-    }
   }
 
   removeTab(index: number) {
     this.file.splice(index, 1);
-    this.selected = index;
+    try {
+      this.selected = this.file.length-1;
+      if (this.file.length == 0) {
+        this.model = {
+          language: 'html',
+          uri: 'main.json',
+          value: ''
+        }
+    }
+    } catch (error) {
+      
+    }
+    
   }
 
   swapEditor(x:number){
@@ -111,9 +139,7 @@ export class EditorComponent {
         }
         console.log('resetting')
         this.model = JSON.parse(JSON.stringify(newData));
-
       }
-      
       
     } catch (error) {
       

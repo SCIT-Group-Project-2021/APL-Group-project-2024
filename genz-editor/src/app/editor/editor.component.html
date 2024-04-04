@@ -16,7 +16,7 @@
         </button>
     </mat-toolbar>
     <mat-tab-group class="editor_Window" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent="false" color="accent" [selectedIndex]="selected"
-    (selectedIndexChange)="selected = ($event); swapEditor(selected); printIndex(selected)">
+    (selectedIndexChange)="selected = ($event); swapEditor(selected);">
         <mat-tab *ngFor="let files of file; let x = index;"> 
             <ng-template mat-tab-label>
                 {{file[x].title}}

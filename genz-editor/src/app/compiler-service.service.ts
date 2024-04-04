@@ -6,8 +6,15 @@ import { from, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CompilerServiceService {
+ 
+  //readonly ROOT_URL = 'https://jsonplaceholder.typicode.com/todos/1'
 
-  readonly ROOT_URL = 'https://jsonplaceholder.typicode.com/todos/1'
+  //readonly ROOT_URL = 'http://localhost:5000/compile'
+
+  readonly ROOT_URL = '  https://httpbin.org/post'
+
+
+  
 
   posts: any;
 
@@ -30,6 +37,10 @@ export class CompilerServiceService {
 
   getDatawithoutsub() {
     return this.http.get(this.ROOT_URL)
+  }
+
+  compileFIle(file: File) {
+    return this.http.post(this.ROOT_URL,file)
   }
 
 
