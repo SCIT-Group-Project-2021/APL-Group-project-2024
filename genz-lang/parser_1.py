@@ -109,10 +109,12 @@ class Parser():
             return p[0].getstr()
         
         @self.pg.production('assignment : IDENTIFIER ASSIGN expression TERMINATOR')
+        @self.pg.production('assignment : IDENTIFIER ASSIGN function_call')
         def assignment_statement(p):
             return ast_1.Assignment(self.builder, self.module, p[0], p[2])
         
         @self.pg.production('initialization : data_type IDENTIFIER ASSIGN expression TERMINATOR')
+        @self.pg.production('initialization : data_type IDENTIFIER ASSIGN function_call')
         def initialization_statement(p):
             return ast_1.Initialization(self.builder, self.module, p[0], p[1].getstr(), p[3])
 
