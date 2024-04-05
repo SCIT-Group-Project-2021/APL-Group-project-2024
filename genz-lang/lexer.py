@@ -46,6 +46,11 @@ class Lexer():
         self.lexer.add('ELSE', r'orIsIt')
         self.lexer.add('WHILE', r'while')
 
+        # Logical Operators
+        self.lexer.add('AND', r'and')
+        self.lexer.add('OR', r'or')
+        self.lexer.add('NOT', r'not')
+
         # Return Statement
         self.lexer.add('RETURN', r'sayLess')
 

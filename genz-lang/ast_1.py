@@ -230,7 +230,9 @@ class RelationalStatement():
 
     def eval(self):
         left_value = self.left.eval()
-        right_value = self.right.eval()
+        right_value = None
+        if self.right:
+            right_value = self.right.eval()
 
         if self.operator == '>':
             return self.builder.icmp_signed('>', left_value, right_value, 'compare_gt')
@@ -244,6 +246,13 @@ class RelationalStatement():
             return self.builder.icmp_signed('==', left_value, right_value, 'compare_eq')
         elif self.operator == '!=':
             return self.builder.icmp_signed('!=', left_value, right_value, 'compare_ne')
+        elif self.operator == 'and':
+            return self.builder.and_(left_value, right_value)
+        elif self.operator == 'or':
+            return self.builder.or_(left_value, right_value)
+        elif self.operator == 'not':
+            return self.builder.not_(left_value)
+
         else:
             raise ValueError(f"Unsupported relational operator: {self.operator}")
         
@@ -328,7 +337,17 @@ class Identifier():
             return self.builder.load(ptr)
         else:
             raise ValueError(f"Identifier '{self.name}' not declared in the current scope")
-        
+
+class BooleanVal():
+    def __init__(self, builder, module, value):
+        self.builder = builder
+        self.module = module
+        self.value = value
+
+    def eval(self):
+        i = ir.Constant(ir.IntType(1), int(self.value))
+        return i
+    
 class Number():
     def __init__(self, builder, module, value):
         self.builder = builder
@@ -338,7 +357,6 @@ class Number():
     def eval(self):
         i = ir.Constant(ir.IntType(8), int(self.value))
         return i
-
 class BinaryOp():
     def __init__(self, builder, module, left, right):
         self.builder = builder

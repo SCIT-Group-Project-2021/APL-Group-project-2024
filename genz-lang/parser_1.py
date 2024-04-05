@@ -9,7 +9,7 @@ class Parser():
              'SUM', 'SUB', 'DIV', 'MUL', 'IDENTIFIER', 'OPEN_CURL_BRACE', 'CLOSE_CURL_BRACE',
              'TERMINATOR', 'COMMA', 'IF', 'ELSE', 'WHILE', 'RETURN', 'TYPE_INT', 'TYPE_VOID', 'TYPE_BOOLEAN', 
              'EQUALS', 'NOT_EQUALS', 'ASSIGN', 'TRUE', 'FALSE', 'GREATER_THAN', 'LESS_THAN', 'GREATER_THAN_EQUALS',
-             'LESS_THAN_EQUALS'
+             'LESS_THAN_EQUALS', 'AND', 'OR', 'NOT'
              ]
         )
         self.module = module
@@ -148,10 +148,15 @@ class Parser():
         @self.pg.production('conditional_expression : expression LESS_THAN_EQUALS expression')
         @self.pg.production('conditional_expression : expression EQUALS expression')
         @self.pg.production('conditional_expression : expression NOT_EQUALS expression')
+        @self.pg.production('conditional_expression : expression AND expression')
+        @self.pg.production('conditional_expression : expression OR expression')
+        @self.pg.production('conditional_expression : NOT expression')
         @self.pg.production('expression : conditional_expression')
         def conditional_expression(p):
             if len(p) == 1:
                 return p[0]
+            if len(p) == 2:
+                return ast_1.RelationalStatement(self.builder, self.module, p[1], None, p[0].value)
             else:
                 left = p[0]
                 right = p[2]
@@ -162,9 +167,9 @@ class Parser():
         @self.pg.production('conditional_expression : FALSE')
         def boolean_expression(p):
             if (p[0].value == 'fax'):
-                return ast_1.Number(self.builder, self.module, 1)
+                return ast_1.BooleanVal(self.builder, self.module, 1)
             elif (p[0].value == 'cap'):
-                return ast_1.Number(self.builder, self.module, 0)
+                return ast_1.BooleanVal(self.builder, self.module, 0)
 
         @self.pg.production('expression : expression SUM expression')
         @self.pg.production('expression : expression SUB expression')
