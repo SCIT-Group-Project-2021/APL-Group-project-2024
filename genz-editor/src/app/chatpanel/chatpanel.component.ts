@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { OpenAiService } from '../open-ai.service';
+import { GeminiService } from '../gemini.service';
 
 @Component({
   selector: 'app-chatpanel',
@@ -13,19 +14,23 @@ import { OpenAiService } from '../open-ai.service';
 export class ChatpanelComponent {
 
   userInput: string = '';
-  chatHistory: string[] = [];
+  prompt: string = '';
 
-  constructor(private chatService: OpenAiService) {}
+  geminiService : GeminiService = inject(GeminiService);
 
-  sendMessage(): void {
-    if (this.userInput.trim() === '') {
-      return;
+  chatHistory : any[] = [];
+  constructor() {
+    this.geminiService.getMessageHistory().subscribe(res =>{
+      if(res){
+        this.chatHistory.push(res);
+      }
+    })
+  }
+
+  sendMessage(){
+    if(this.prompt){
+      this.geminiService.generateText(this.prompt);
     }
-    this.chatHistory.push(this.userInput);
-    this.chatService.sendMessage(this.userInput).subscribe(response => {
-      this.chatHistory.push(response.data.choices[0].text.trim());
-    });
-    this.userInput = '';
   }
 
 }

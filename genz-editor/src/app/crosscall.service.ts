@@ -34,5 +34,15 @@ export class CrosscallService {
     return this.editorData;
   }
 
+  editorInput !:  string;
+
+  checkEditorData(): string{ 
+    return this.editorInput;
+  }
+
+  setEditorData(data: string) {
+    this.editorInput=data;
+  }
+
   
 }

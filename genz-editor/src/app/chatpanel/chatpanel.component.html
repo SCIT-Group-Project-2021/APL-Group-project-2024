@@ -1,6 +1,16 @@
-<div *ngFor="let message of chatHistory">
+<!-- <div *ngFor="let message of chatHistory">
     {{ message }}
 </div>
 <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()">
-<button (click)="sendMessage()">Send</button>
+-->
+<mat-form-field class="example-full-width" color="accent">
+    <mat-label>Ask Gemini to write you a program</mat-label>
+    <textarea matInput cdkTextareaAutosize placeholder="Write a program that..." [(ngModel)]="prompt"></textarea>
+</mat-form-field>
+<div class="example-button-container" (click)="sendMessage()">
+<button mat-fab color="primary" aria-label="Example icon button with a delete icon">
+    <mat-icon>send</mat-icon>
+</button>
+</div>
+
   
