@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from subprocess import run, PIPE
 
@@ -8,7 +8,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/')
 def hello():
-    return 'Hello, World! This is a Flask server.'
+    return render_template('index.html')
 
 @app.route('/compile', methods=['POST'])
 def compile_code():

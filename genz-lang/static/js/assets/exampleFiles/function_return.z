@@ -1,0 +1,5 @@
+int Sum(int a, int b) {
+    sayLess a + b.
+}
+int res = Sum(2,4).
+print(res).
