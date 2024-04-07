@@ -1,119 +1,47 @@
-# APL-Group-project-2024
+# GenzLang Compiler
 
-# Program
+## Setup Instructions
 
-    <file> ::= <program-dec>
-    
-    <program-dec> ::= programName <identifier> OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
+So, the requirements for this project are:
 
-## Literals
+- [Anaconda](https://www.anaconda.com/download) (way simpler to install LLVMlite through conda than pip)
 
-    <literal> ::= DQUOTE <string> DQUOTE | <bool> | <num-literal>
+- LLVMlite
 
-    <num-literal> ::= <float> | <int>
-    
-    <type> ::= String | int | char | float
+> $ conda install --channel=numba llvmlite
 
-    <bool> ::= TRUE | FALSE    
-    
-    <string> ::= <string>+ | <char>+ | <int>+ 
-    
-    <char> ::= a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
-    
-    <float> ::= <int>* INT_SEPARATOR <int>+
-    
-    <int> ::= <num>+
-    
-    <num> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
-    
-## Statement
+- RPLY (same as PLY but with a better API)
 
-    <statements> ::= <statement>+
+> $ conda install -c conda-forge rply
 
-    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <expression>
-    
-    <selection-statement> ::= <if-selection> | <switch-selection>
-    
-    <iteratation-statement> ::= <for-loop> | <while-loop>
+- LLC (LLVM static compiler)
 
-    <declaration-statement> ::= <type-declaration> TERMINATOR | <function-declaration>
-    
-    <return-statement> ::= RETURN TERMINATOR | <identifier> RETURN TERMINATOR | <literal> RETURN TERMINATOR
+- GCC (or other linking tool)
 
-## Loop
+### Creating and Activating a Conda Environment
 
-    <for-loop> ::= FOR_OP OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+> conda create -n <env-name>
 
-    <while-loop> ::= WHILE_OP OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
+> conda activate <env-name>
 
-## Expression
-    
-    <expression> ::= <math-expression> TERMINATOR | <function-expression> TERMINATOR
+### Ply Lex Yacc
 
-    <math-expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math-expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math-expression> CLSD_BRC
+<https://www.dabeaz.com/ply/ply.html>
 
-    <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ SEPARATOR {<identifier> | <literal> }}*}* CLSD_BRC
-    
-## Declaration
-    
-    <type-declaration> ::= <type> <identifier> TERMINATOR | <type> <identifier> EQUAL <literal> TERMINATOR
-    
-    <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ SEPARATOR <type-declaration>}*}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
+### Rply docs
 
-    <identifier> ::= <string>
+Link  to docs: <https://rply.readthedocs.io/_/downloads/en/latest/pdf/>
 
-## Selection
-    
-    <if-selection> ::= IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
+### LLVM Reference Manual
 
-    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+   
+Link: <https://releases.llvm.org/11.0.0/docs/LangRef.html#introduction>
 
-# Tokens
-    
-    OPN_BRC ::= (
-    
-    CLSD_BRC ::= )
-    
-    OPN_C_BRC ::= {
-    
-    CLSD_C_BRC ::= }
-    
-    TERMINATOR ::= .
-    
-    SQUOTE ::= '
-    
-    DQUOTE ::= "
-    
-    INT_SEPARATOR ::= .
+Link to LLVMLite docs: <https://llvmlite.readthedocs.io/en/latest/>
 
-    SEPARATOR ::= ,
-    
-    EQUAL ::= =
-    
-    MULTIPLY ::= *
+## Commands to Generate Output file & Run Executable
 
-    DIVIDE ::= /
-    
-    ADD ::= +
-    
-    SUB ::= -
-    
-    TRUE ::= fax
-    
-    FALSE ::= cap
-    
-    IF ::= isItReally
-    
-    THEN ::= bet
-    
-    ELSE ::= orIsIt
-    
-    RETURN ::= sayLess
-    
-    TERMINATOR ::= . 
+$ llc -filetype=obj output.ll
 
-    SWITCH ::=
+$ gcc output.o -o output
 
-    FOR_OP ::=
-
-    WHILE_OP ::=
+$ ./output
