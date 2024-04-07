@@ -5,6 +5,7 @@ import { CrosscallService } from '../crosscall.service';
 import { File } from 'buffer';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { GeminiService } from '../gemini.service';
 
 @Component({
   selector: 'app-editor',
@@ -16,13 +17,21 @@ export class EditorComponent {
   readonly file_url = 'assets/exampleFiles/'
 
   clickEventsubscription!:Subscription
+  geminiSub!:Subscription
   
-  constructor(private crosscallService:CrosscallService,private http: HttpClient) { 
+  constructor(private crosscallService:CrosscallService, private geminiService: GeminiService, private http: HttpClient) { 
     this.clickEventsubscription = this.crosscallService.getloadFileEvent().subscribe((value)=>{
       console.log(value)
       this.loadFile(true,value);
     })
+
+    this.geminiSub = this.geminiService.getGeminiCode().subscribe(async value =>{
+      console.log(value)
+      await this.loadGeminiFile(true,value);
+    })
   }
+
+
 
   runProgram() {
     this.crosscallService.sendClickEvent();
@@ -62,7 +71,26 @@ export class EditorComponent {
     }
     
   }
-  
+
+
+  loadGeminiFile(selectAfterAdding: boolean, response : string) {
+    this.file.push( {
+      title: "gemini response #" + (1+this.file.length) +".z",
+      model: {
+        language: 'c',
+        uri: 'main.json',
+        value: response
+      }
+    });
+    if (selectAfterAdding) {
+      if (this.file.length == 0) {
+        this.selected = (this.file.length);
+      } else {
+        this.selected = (this.file.length-1);
+      }
+      
+    }
+  }
 
   addTab(selectAfterAdding: boolean) {
     this.file.push( {

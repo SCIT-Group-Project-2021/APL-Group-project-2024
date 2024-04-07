@@ -23,6 +23,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
 
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { TerminalModule } from 'primeng/terminal'; 
@@ -58,7 +59,8 @@ import { OpenAI } from 'openai';
     MatCardModule,
     TerminalModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatInputModule
   ],
   providers: [
     provideClientHydration(),
