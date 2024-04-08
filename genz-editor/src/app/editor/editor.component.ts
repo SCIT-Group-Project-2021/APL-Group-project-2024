@@ -79,7 +79,7 @@ export class EditorComponent {
       model: {
         language: 'c',
         uri: 'main.json',
-        value: response
+        value: response.slice(3,-3)
       }
     });
     if (selectAfterAdding) {
