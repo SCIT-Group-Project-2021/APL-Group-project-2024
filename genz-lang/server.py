@@ -10,7 +10,7 @@ app = Flask(__name__)
 def hello():
     return render_template('index.html')
 
-'''''
+
 @app.route('/compile', methods=['POST'])
 def compile_code():
     # Create the 'uploads' directory if it doesn't exist
@@ -49,7 +49,7 @@ def compile_code():
     # Respond with the output from executing the executable
     return jsonify({'output': execution_output})
 
-'''''
+
 
 if __name__ == '__main__':
     app.run(debug=True)
