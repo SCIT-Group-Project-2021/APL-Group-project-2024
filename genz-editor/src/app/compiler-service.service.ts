@@ -9,7 +9,7 @@ export class CompilerServiceService {
  
   //readonly ROOT_URL = 'https://jsonplaceholder.typicode.com/todos/1'
 
-  readonly ROOT_URL = 'http://127.0.0.1:5000/compile'
+  readonly ROOT_URL = 'http://localhost:5000/compile'
 
   // readonly ROOT_URL = '  https://httpbin.org/post'
 
