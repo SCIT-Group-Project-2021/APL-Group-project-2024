@@ -1,15 +1,16 @@
 import os
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
+#from flask_cors import CORS
 from subprocess import run, PIPE
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+#CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/')
 def hello():
     return render_template('index.html')
 
+'''''
 @app.route('/compile', methods=['POST'])
 def compile_code():
     # Create the 'uploads' directory if it doesn't exist
@@ -47,6 +48,8 @@ def compile_code():
 
     # Respond with the output from executing the executable
     return jsonify({'output': execution_output})
+
+'''''
 
 if __name__ == '__main__':
     app.run(debug=True)
