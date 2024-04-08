@@ -1,4 +1,0 @@
-int b.
-int a = 2.
-b = 4.
-print(b * 2).
