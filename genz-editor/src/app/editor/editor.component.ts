@@ -24,6 +24,10 @@ export class EditorComponent {
       console.log(value)
       this.loadFile(true,value);
     })
+    this.clickEventsubscription = this.crosscallService.getloadUploadFileEvent().subscribe((value)=>{
+      console.log(value)
+      this.loadUploadFile(true,value[0],value[1]);
+    })
 
     this.geminiSub = this.geminiService.getGeminiCode().subscribe(async value =>{
       console.log(value)
@@ -31,11 +35,44 @@ export class EditorComponent {
     })
   }
 
-
-
   runProgram() {
     this.crosscallService.sendClickEvent();
   }
+
+  examplefile = [
+    {
+      title: "datatypes_example.z",
+      model: {
+        language: 'c',
+        uri: 'main.json',
+        value: 'int b.\r\nint a = 2.\r\nb = 4.\r\nprint(b * 2).\r\n'
+      }
+    },
+    {
+      title: "if_example.z",
+      model: {
+        language: 'c',
+        uri: 'main.json',
+        value: 'int age = 21.\r\nbool isMale = fax.\r\nisItReally ((age >= 18) and isMale) {\r\n    print(fax).\r\n} orIsIt {\r\n    print(cap).\r\n}'
+      }
+    },
+    {
+      title: "print_example2.z",
+      model: {
+        language: 'c',
+        uri: 'main.json',
+        value: 'print(1 == 1).\r\nprint(1 != 1).\r\nprint(2 > 3).\r\nprint(5 < 10).\r\nprint(21 >= 18).\r\nprint(21 <= 18).'
+      }
+    },
+    {
+      title: "function_return.z",
+      model: {
+        language: 'c',
+        uri: 'main.json',
+        value: 'int Sum(int a, int b) {\r\n    sayLess a + b.\r\n}\r\nint res = Sum(2,4).\r\nprint(res).'
+      }
+    }
+  ]
 
   file = [
     {
@@ -113,14 +150,16 @@ export class EditorComponent {
   }
 
   loadFile(selectAfterAdding: boolean,file?: any) {
-    this.http.get(this.file_url + file, {responseType: 'text'} )
-        .subscribe(data => {
+
+    const selectedFile = this.examplefile.find((item) => item.title === file);
+    const value = selectedFile?.model.value ?? '';
+    {
           this.file.push( {
-            title: "file#" + (1+this.file.length) +".z",
+            title: file,
             model: {
               language: 'c',
               uri: 'main.json',
-              value: data
+              value: value
             }
           });
           if (selectAfterAdding) {
@@ -131,8 +170,25 @@ export class EditorComponent {
             }
             
           }
-        });
-    
+        }    
+  }
+
+  loadUploadFile(selectAfterAdding: boolean, filetitle: string,filedata: string) {
+    this.file.push( {
+      title: filetitle,
+      model: {
+        language: 'c',
+        uri: 'main.json',
+        value: filedata
+      }
+    });
+    if (selectAfterAdding) {
+      if (this.file.length == 0) {
+        this.selected = (this.file.length);
+      } else {
+        this.selected = (this.file.length-1);
+      } 
+    }    
   }
 
   removeTab(index: number) {

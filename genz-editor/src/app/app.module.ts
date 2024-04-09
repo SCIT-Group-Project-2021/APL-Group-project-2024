@@ -27,6 +27,7 @@ import {MatInputModule} from '@angular/material/input';
 
 import { CodeEditorModule } from '@ngstack/code-editor';
 import { TerminalModule } from 'primeng/terminal'; 
+import { FileUploadModule  } from 'primeng/fileupload'; 
 
 import { saveAs } from 'file-saver';
 import { config } from 'dotenv';
@@ -60,7 +61,8 @@ import { OpenAI } from 'openai';
     TerminalModule,
     HttpClientModule,
     FormsModule,
-    MatInputModule
+    MatInputModule,
+    FileUploadModule 
   ],
   providers: [
     provideClientHydration(),

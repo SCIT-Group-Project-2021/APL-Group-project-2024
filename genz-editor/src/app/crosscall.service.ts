@@ -24,6 +24,15 @@ export class CrosscallService {
     return this.loadfile.asObservable();
   }
 
+  private loaduploadfile = new Subject<any>();
+  
+  loadUploadFileEvent(title: string[]) {
+    this.loaduploadfile.next(title);
+  }
+  getloadUploadFileEvent(): Observable<any>{ 
+    return this.loaduploadfile.asObservable();
+  }
+
   editorData !:  string;
 
   sendEditorData(data: string) {

@@ -30,7 +30,7 @@ export class RootComponent {
   public editor!: EditorComponent;
 
   toggleTerminal() {
-    this.isVisible = !this.isVisible;
+    //this.isVisible = !this.isVisible;
   }
 
   addTab() {
