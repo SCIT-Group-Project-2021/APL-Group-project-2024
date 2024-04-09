@@ -1,100 +1,94 @@
 # APL-Group-project-2024
 
-# Program
+# EBNF
 
-    <file> ::= <program-dec>
-    
-    <program-dec> ::= programName <identifier> OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
+    <program> ::= <statements>
 
-## Literals
+    <statements> ::= <statement> <statements> | <statement>
 
-    <literal> ::= DQUOTE <string> DQUOTE | <bool> | <num-literal>
+    <block_statements> ::= <block_statement> <block_statements> | <block_statement>
+    
+    <statement> ::= <assignment> | <if_statement> | <while_statement> | <return_statement> | <print_statement> | <var_declaration> | <initialization> | <function_declaration> | <function_call>
 
-    <num-literal> ::= <float> | <int>
-    
-    <type> ::= String | int | char | float
+    <return_statement> ::= RETURN <expression> TERMINATOR
 
-    <bool> ::= TRUE | FALSE    
-    
-    <string> ::= <string>+ | <char>+ | <int>+ 
-    
-    <char> ::= a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
-    
-    <float> ::= <int>* INT_SEPARATOR <int>+
-    
-    <int> ::= <num>+
-    
-    <num> ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
-    
-## Statement
+    <print_statement> ::= PRINT OPEN_PAREN <expression> CLOSE_PAREN TERMINATOR
 
-    <statements> ::= <statement>+
+    <while_statement> ::= WHILE OPEN_PAREN <conditional_expression> CLOSE_PAREN OPEN_CURL_BRACE <statements> CLOSE_CURL_BRACE
 
-    <statement> ::= <selection-statement> | <return-statement> | <iteratation-statement> | <declaration-statement> | <expression>
-    
-    <selection-statement> ::= <if-selection> | <switch-selection>
-    
-    <iteratation-statement> ::= <for-loop> | <while-loop>
-
-    <declaration-statement> ::= <type-declaration> TERMINATOR | <function-declaration>
-    
-    <return-statement> ::= RETURN TERMINATOR | <identifier> RETURN TERMINATOR | <literal> RETURN TERMINATOR
-
-## Loop
-
-    <for-loop> ::= FOR_OP OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
-
-    <while-loop> ::= WHILE_OP OPN_BRC <statements> CLSD_BRC OPN_C_BRC <statements> CLSD_C_BRC
-
-## Expression
-    
     <expression> ::= <math-expression> TERMINATOR | <function-expression> TERMINATOR
 
     <math-expression> ::= {<num-literal> | <identifier>} BINARY_OPERATOR {<num-literal> | <identifier>} | {<num-literal> | <identifier>} BINARY_OPERATOR <math-expression> | {<num-literal> | <identifier>} BINARY_OPERATOR OPN_BRC <math-expression> CLSD_BRC
 
     <function-expression> ::= <identifier> OPN_BRC {{<identifier> | <literal>}{ SEPARATOR {<identifier> | <literal> }}*}* CLSD_BRC
-    
-## Declaration
-    
-    <type-declaration> ::= <type> <identifier> TERMINATOR | <type> <identifier> EQUAL <literal> TERMINATOR
-    
-    <function-declaration> ::= <type> <identifier>  OPN_BRC {<type-declaration>{ SEPARATOR <type-declaration>}*}* CLSD_BRC OPN_C_BRC <statements> <return-statement> CLSD_C_BRC
 
-    <identifier> ::= <string>
+    <conditional_expression> ::= TRUE | FALSE | <expression> GREATER_THAN <expression> | <expression> LESS_THAN <expression> | <expression> GREATER_THAN_EQUALS <expression> | <expression> LESS_THAN_EQUALS <expression> | <expression> EQUALS <expression> | <expression> NOT_EQUALS <expression> | <expression> AND <expression> | <expression> OR <expression> | NOT <expression>
 
-## Selection
+    <expression> ::= <conditional_expression> | <expression> SUM <expression> | <expression> SUB <expression> | <expression> MUL <expression> | <expression> DIV <expression> | NUMBER
+
+    <expression> ::= <identifier> | OPEN_PAREN <expression> CLOSE_PAREN
+
+    <function_declaration> ::= <data_type> IDENTIFIER OPEN_PAREN <parameters> CLOSE_PAREN OPEN_CURL_BRACE <block_statements> CLOSE_CURL_BRACE | <data_type> IDENTIFIER OPEN_PAREN CLOSE_PAREN OPEN_CURL_BRACE <block_statements> CLOSE_CURL_BRACE
+
+    <parameters> ::= <parameter> COMMA <parameters> | <parameter>
+
+    <parameter> ::= <data_type> IDENTIFIER
+
+    <var_declaration> ::= <data_type> IDENTIFIER TERMINATOR
+
+    <assignment> ::= IDENTIFIER ASSIGN <expression> TERMINATOR | IDENTIFIER ASSIGN <function_call>
     
-    <if-selection> ::= IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statement> CLSD_C_BRC | IF OPN_BRC <statements> CLSD_BRC THEN OPN_C_BRC <statements> CLSD_C_BRC ELSE OPN_C_BRC <statements> CLSD_C_BRC
+    <initialization> ::= <data_type> IDENTIFIER ASSIGN <expression> TERMINATOR | <data_type> IDENTIFIER ASSIGN <function_call>
 
-    <switch-selection> ::= SWITCH OPN_BRC <identifier> CLSD_BRC { option <identifier> OPN_C_BRC <statement> CLSD_C_BRC }+   
+    <identifier> ::= IDENTIFIER
 
+    <function_call> ::= IDENTIFIER OPEN_PAREN <arguments> CLOSE_PAREN TERMINATOR | IDENTIFIER OPEN_PAREN CLOSE_PAREN TERMINATOR
+
+    <arguments> ::= <arguments> COMMA <arguments> | <argument>
+
+    <argument> ::= <expression>
+    
+    <if_statement> ::= IF OPEN_PAREN <conditional_expression> CLOSE_PAREN OPEN_CURL_BRACE <block_statements> CLOSE_CURL_BRACE | IF OPEN_PAREN <conditional_expression> CLOSE_PAREN OPEN_CURL_BRACE <block_statements> CLOSE_CURL_BRACE ELSE OPEN_CURL_BRACE <block_statements> CLOSE_CURL_BRACE
+  
 # Tokens
+
+    PRINT ::= print
+
+    OPEN_PAREN ::= (
     
-    OPN_BRC ::= (
+    CLOSE_PAREN ::= )
     
-    CLSD_BRC ::= )
+    OPEN_CURL_BRACE ::= {
     
-    OPN_C_BRC ::= {
-    
-    CLSD_C_BRC ::= }
+    CLOSE_CURL_BRACE ::= }
+
+    NUMBER ::= d+
     
     TERMINATOR ::= .
-    
-    SQUOTE ::= '
-    
-    DQUOTE ::= "
-    
-    INT_SEPARATOR ::= .
 
-    SEPARATOR ::= ,
+    COMMA ::= ,
+
+    ASSIGN  ::= =   
     
     EQUAL ::= =
-    
-    MULTIPLY ::= *
 
-    DIVIDE ::= /
+    EQUALS ::= ==
+
+    NOT_EQUALS ::= !=
+
+    GREATER_THAN_EQUALS ::= >=
+
+    LESS_THAN_EQUALS ::= <=
+
+    GREATER_THAN ::= >
+
+    LESS_THAN ::= <
     
-    ADD ::= +
+    MUL ::= *
+
+    DIV ::= /
+    
+    SUM ::= +
     
     SUB ::= -
     
@@ -107,13 +101,21 @@
     THEN ::= bet
     
     ELSE ::= orIsIt
+
+    WHILE ::= while
+
+    OR ::= or
+
+    NOT ::= not
     
     RETURN ::= sayLess
     
     TERMINATOR ::= . 
 
-    SWITCH ::=
+    TYPE_INT ::= int
 
-    FOR_OP ::=
+    TYPE_VOID ::= void
 
-    WHILE_OP ::=
+    TYPE_BOOLEAN ::= bool
+
+    IDENTIFIER ::= [a-zA-Z_][a-zA-Z0-9_]
