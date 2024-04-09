@@ -36,7 +36,7 @@ def compile_code():
     os.system(compile_command)
 
     # Generate the object file
-    llc_command = f"clang output.ll"
+    llc_command = f"clang -c output.ll -o output.o"
     os.system(llc_command)
 
     # Generate the executable

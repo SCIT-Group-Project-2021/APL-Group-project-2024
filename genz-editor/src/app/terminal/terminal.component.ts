@@ -24,8 +24,8 @@ export class TerminalComponent {
     this.terminalService.commandHandler.subscribe(command => { 
       this.checkCommand(command)//function that calls functions, see case
     }); 
-    this.clickEventsubscription = this.crosscallservice.getClickEvent().subscribe((data)=>{
-      this.runProgram();
+    this.clickEventsubscription = this.crosscallservice.getClickEvent().subscribe(async (data)=>{
+      await this.runProgram();
     })
   }
 
@@ -63,7 +63,7 @@ export class TerminalComponent {
     this.compiler.compileFIle(this.file).subscribe(async (res) => {
       await this.stringifyJSON(res);
       console.log(res)
-      //await this.terminalService.sendResponse(this.response); 
+      await this.terminalService.sendResponse(this.response); 
     })
   }
 
