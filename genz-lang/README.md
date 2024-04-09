@@ -1,6 +1,13 @@
 # GenzLang Compiler
 
+# To activate Virtual enviornment
+
+$ Scripts/activate
+
+$ flask --app server run
+
 ## Setup Instructions
+
 
 So, the requirements for this project are:
 
@@ -45,3 +52,4 @@ $ llc -filetype=obj output.ll
 $ gcc output.o -o output
 
 $ ./output
+
